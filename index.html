@@ -652,6 +652,43 @@
         <div class="be-lbl" id="be-lbl">—</div>
       </div>
     </div>
+
+    <!-- TABLA DE ESCALADO -->
+    <div class="modelo-card" style="margin-top:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+        <div>
+          <div style="font-size:13px;font-weight:500;color:var(--text)">Escalado por perros/día</div>
+          <div style="font-size:12px;color:var(--text-light);margin-top:2px">¿Cuándo es rentable? ¿Cuándo puedes contratar?</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span style="font-size:12px;color:var(--text-muted)">Coste ayuda operativa</span>
+          <input type="range" min="400" max="1600" value="900" step="100" id="sl-emp" style="width:90px;height:4px;-webkit-appearance:none;appearance:none;background:var(--green-mid);border-radius:2px;outline:none">
+          <span style="font-size:13px;font-weight:500;min-width:52px;color:var(--text)" id="out-emp">900€</span>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto">
+        <table class="tarifa-table" id="escala-table">
+          <thead>
+            <tr>
+              <th>Perros/día</th>
+              <th>Clientes</th>
+              <th>Ingresos/mes</th>
+              <th>Costes</th>
+              <th>Resultado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="escala-body"></tbody>
+        </table>
+      </div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--text-light)">
+        <span>🔴 pérdidas</span>
+        <span>🟡 positivo, sin margen para empleado</span>
+        <span>🟢 puedes contratar</span>
+        <span style="color:var(--green)">★ furgoneta necesaria</span>
+      </div>
+    </div>
   </section>
 
   <!-- PALANCAS -->
@@ -701,6 +738,51 @@ const FURGO_COSTE = 800;
 // Tarifa mensual según días/semana (bono estándar con ruta)
 const TARIFA_BONO = { 1: 100, 1.5: 140, 2: 180, 2.5: 210, 3: 240, 3.5: 270, 4: 300, 4.5: 325, 5: 350 };
 
+function buildEscala() {
+  const freq  = parseFloat(document.getElementById('sl-freq').value);
+  const t     = parseInt(document.getElementById('sl-t').value);
+  const terreno = parseInt(document.getElementById('sl-terreno').value);
+  const otros = parseInt(document.getElementById('sl-otros').value);
+  const emp   = parseInt(document.getElementById('sl-emp').value);
+
+  document.getElementById('out-emp').textContent = emp + '€';
+
+  const tbody = document.getElementById('escala-body');
+  tbody.innerHTML = '';
+
+  for (let dia = 1; dia <= 12; dia++) {
+    const furgo    = dia >= FURGO_UMBRAL_DIA;
+    const clientes = Math.ceil(dia * 5 / freq);
+    const ingresos = clientes * t;
+    const costes   = terreno + (furgo ? FURGO_COSTE : 0) + otros;
+    const resultado = ingresos - costes;
+    const puedeEmp = resultado >= emp;
+    const positivo = resultado >= 0;
+
+    let emoji, rowStyle = '';
+    if (puedeEmp)       { emoji = '🟢'; rowStyle = 'background:var(--green-pale)'; }
+    else if (positivo)  { emoji = '🟡'; rowStyle = 'background:#fffbf0'; }
+    else                { emoji = '🔴'; }
+
+    const furgoTag = furgo ? ' <span style="color:var(--green);font-size:11px">★</span>' : '';
+    const empTag   = puedeEmp
+      ? `<span class="ahorro">+${(resultado - emp).toLocaleString('es-ES')}€ tras contratar</span>`
+      : resultado > 0
+        ? `<span style="font-size:11px;color:var(--text-light)">faltan ${(emp - resultado).toLocaleString('es-ES')}€</span>`
+        : '';
+
+    tbody.innerHTML += `
+      <tr style="${rowStyle}">
+        <td><strong>${dia}</strong>${furgoTag}</td>
+        <td>${clientes}</td>
+        <td class="tarifa-precio">${ingresos.toLocaleString('es-ES')}€</td>
+        <td style="color:var(--text-muted)">${costes.toLocaleString('es-ES')}€</td>
+        <td class="${positivo ? 'pos' : 'neg'}" style="font-weight:500">${resultado >= 0 ? '+' : ''}${resultado.toLocaleString('es-ES')}€</td>
+        <td style="text-align:right">${emoji} ${empTag}</td>
+      </tr>`;
+  }
+}
+
 function calc() {
   const p = parseInt(document.getElementById('sl-p').value);
   const freq = parseFloat(document.getElementById('sl-freq').value);
@@ -708,14 +790,10 @@ function calc() {
   const terreno = parseInt(document.getElementById('sl-terreno').value);
   const otros = parseInt(document.getElementById('sl-otros').value);
 
-  // Perros/día = clientes × (días/sem / 5 días laborables)
   const perrosDia = Math.round(p * freq / 5 * 10) / 10;
   const perrosDiaRedondeado = Math.ceil(perrosDia);
-  // Días al mes que hay que ir = días en los que al menos 1 perro viene
-  // Aproximación: si la freq media es X días/sem → vas X días/sem → ~X*4.3 días/mes
   const diasMes = Math.round(Math.min(freq, 5) * 4.3);
-  // Tarifa equivalente del bono más cercano a la frecuencia media
-  const freqKey = Math.round(freq * 2) / 2; // redondear a 0.5 más cercano
+  const freqKey = Math.round(freq * 2) / 2;
   const tarifaEquiv = TARIFA_BONO[freqKey] || Math.round(freq / 5 * 350);
 
   document.getElementById('out-p').textContent = p;
@@ -769,9 +847,11 @@ function calc() {
     ? 'Break-even alcanzado — beneficio de ' + fmt(resultado) + '/mes'
     : 'Necesitas ' + perrosNecesarios + ' clientes para break-even (te faltan ' + Math.max(0, perrosNecesarios - p) + ')';
   document.getElementById('be-lbl').textContent = beLbl;
+
+  buildEscala();
 }
 
-['sl-p','sl-freq','sl-t','sl-terreno','sl-otros'].forEach(id => {
+['sl-p','sl-freq','sl-t','sl-terreno','sl-otros','sl-emp'].forEach(id => {
   document.getElementById(id).addEventListener('input', calc);
 });
 calc();
