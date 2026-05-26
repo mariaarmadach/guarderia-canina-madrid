@@ -583,13 +583,34 @@
     <div class="section-label">Simulador</div>
     <div class="section-title">Modelo financiero mensual</div>
     <div class="modelo-card">
-      <div class="info-note">Todos los valores son <strong>mensuales</strong> — resultado de un mes concreto, no acumulado. La furgoneta entra automáticamente a partir del 4º perro.</div>
+      <div class="info-note">Todos los valores son <strong>mensuales</strong> — resultado de un mes concreto, no acumulado. La furgoneta entra automáticamente cuando la media diaria supera 4 perros.</div>
 
       <div class="slider-row">
-        <span class="slider-label">Perros en bono mensual</span>
+        <span class="slider-label">Perros clientes (total)</span>
         <input type="range" min="1" max="20" value="5" step="1" id="sl-p">
         <span class="slider-val" id="out-p">5</span>
       </div>
+      <div class="slider-row">
+        <span class="slider-label">Frecuencia media (días/sem)</span>
+        <input type="range" min="1" max="5" value="3" step="0.5" id="sl-freq">
+        <span class="slider-val" id="out-freq">3d/sem</span>
+      </div>
+
+      <div id="daily-box" style="display:flex;gap:16px;margin:0 0 16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:120px;background:var(--green-pale);border:1px solid var(--green-mid);border-radius:var(--radius-sm);padding:12px 16px;text-align:center">
+          <div style="font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Perros/día estimados</div>
+          <div style="font-family:'Nunito',sans-serif;font-size:26px;font-weight:700;color:var(--green)" id="out-dia">—</div>
+        </div>
+        <div style="flex:1;min-width:120px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center">
+          <div style="font-size:11px;color:var(--text-light);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Días de trabajo/mes</div>
+          <div style="font-family:'Nunito',sans-serif;font-size:26px;font-weight:700;color:var(--text)" id="out-dias-mes">—</div>
+        </div>
+        <div style="flex:1;min-width:120px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center">
+          <div style="font-size:11px;color:var(--text-light);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Tarifa media equiv.</div>
+          <div style="font-family:'Nunito',sans-serif;font-size:26px;font-weight:700;color:var(--text)" id="out-tarifa-equiv">—</div>
+        </div>
+      </div>
+
       <div class="slider-row">
         <span class="slider-label">Tarifa media por perro</span>
         <input type="range" min="100" max="400" value="260" step="20" id="sl-t">
@@ -674,31 +695,51 @@
 
 <script>
 const fmt = n => n.toLocaleString('es-ES') + '€';
-const FURGO_UMBRAL = 4;
+const FURGO_UMBRAL_DIA = 4;
 const FURGO_COSTE = 800;
+
+// Tarifa mensual según días/semana (bono estándar con ruta)
+const TARIFA_BONO = { 1: 100, 1.5: 140, 2: 180, 2.5: 210, 3: 240, 3.5: 270, 4: 300, 4.5: 325, 5: 350 };
 
 function calc() {
   const p = parseInt(document.getElementById('sl-p').value);
+  const freq = parseFloat(document.getElementById('sl-freq').value);
   const t = parseInt(document.getElementById('sl-t').value);
   const terreno = parseInt(document.getElementById('sl-terreno').value);
   const otros = parseInt(document.getElementById('sl-otros').value);
 
+  // Perros/día = clientes × (días/sem / 5 días laborables)
+  const perrosDia = Math.round(p * freq / 5 * 10) / 10;
+  const perrosDiaRedondeado = Math.ceil(perrosDia);
+  // Días al mes que hay que ir = días en los que al menos 1 perro viene
+  // Aproximación: si la freq media es X días/sem → vas X días/sem → ~X*4.3 días/mes
+  const diasMes = Math.round(Math.min(freq, 5) * 4.3);
+  // Tarifa equivalente del bono más cercano a la frecuencia media
+  const freqKey = Math.round(freq * 2) / 2; // redondear a 0.5 más cercano
+  const tarifaEquiv = TARIFA_BONO[freqKey] || Math.round(freq / 5 * 350);
+
   document.getElementById('out-p').textContent = p;
+  document.getElementById('out-freq').textContent = freq + 'd/sem';
   document.getElementById('out-t').textContent = t + '€';
   document.getElementById('out-terreno').textContent = terreno + '€';
   document.getElementById('out-otros').textContent = otros + '€';
 
-  const usaFurgo = p >= FURGO_UMBRAL;
+  document.getElementById('out-dia').textContent = perrosDiaRedondeado;
+  document.getElementById('out-dias-mes').textContent = diasMes + ' días';
+  document.getElementById('out-tarifa-equiv').textContent = tarifaEquiv + '€';
+
+  const usaFurgo = perrosDiaRedondeado >= FURGO_UMBRAL_DIA;
   const furgoCoste = usaFurgo ? FURGO_COSTE : 0;
 
   const fmsg = document.getElementById('furgo-msg');
   const ftxt = document.getElementById('furgo-txt');
   if (usaFurgo) {
     fmsg.className = 'furgo-msg active';
-    ftxt.textContent = p + ' perros → furgoneta activa: 800€/mes';
+    ftxt.textContent = perrosDiaRedondeado + ' perros/día → furgoneta activa: 800€/mes';
   } else {
+    const faltan = FURGO_UMBRAL_DIA - perrosDiaRedondeado;
+    ftxt.textContent = 'Mokka con arneses — 0€. Faltan ' + faltan + ' perro' + (faltan > 1 ? 's' : '') + '/día para necesitar furgoneta.';
     fmsg.className = 'furgo-msg mokka';
-    ftxt.textContent = 'Usando Mokka con arneses — 0€. Furgoneta entra en el perro nº' + FURGO_UMBRAL + '.';
   }
 
   const ingresos = p * t;
@@ -726,11 +767,11 @@ function calc() {
   const perrosNecesarios = Math.ceil(costes / t);
   const beLbl = resultado >= 0
     ? 'Break-even alcanzado — beneficio de ' + fmt(resultado) + '/mes'
-    : 'Necesitas ' + perrosNecesarios + ' perros para break-even (te faltan ' + Math.max(0, perrosNecesarios - p) + ')';
+    : 'Necesitas ' + perrosNecesarios + ' clientes para break-even (te faltan ' + Math.max(0, perrosNecesarios - p) + ')';
   document.getElementById('be-lbl').textContent = beLbl;
 }
 
-['sl-p','sl-t','sl-terreno','sl-otros'].forEach(id => {
+['sl-p','sl-freq','sl-t','sl-terreno','sl-otros'].forEach(id => {
   document.getElementById(id).addEventListener('input', calc);
 });
 calc();
