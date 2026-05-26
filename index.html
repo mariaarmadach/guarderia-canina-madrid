@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Plan — Guardería Canina de Campo Madrid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1a5c3a;
+    --green-light: #2d7a52;
+    --green-pale: #e8f4ee;
+    --green-mid: #c5e0d0;
+    --amber: #c47f1a;
+    --amber-pale: #fdf3e0;
+    --text: #1a1a18;
+    --text-muted: #5a5a52;
+    --text-light: #8a8a7e;
+    --bg: #f9f7f2;
+    --white: #ffffff;
+    --border: rgba(26,92,58,0.12);
+    --border-mid: rgba(26,92,58,0.22);
+    --radius: 12px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--green);
+    color: white;
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 50%);
+  }
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .hero h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(34px, 5vw, 58px); letter-spacing: -0.5px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: #a8d5b8;
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    max-width: 520px;
+    margin: 0 auto 40px;
+    font-weight: 300;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-val {
+    font-family: 'Nunito', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #a8d5b8;
+    display: block;
+  }
+  .hero-stat-lbl {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  nav a {
+    padding: 16px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .2s, border-color .2s;
+  }
+  nav a:hover { color: var(--green); border-bottom-color: var(--green); }
+
+  /* LAYOUT */
+  .container { max-width: 900px; margin: 0 auto; padding: 60px 24px; }
+  .section { margin-bottom: 64px; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 12px;
+  }
+  .card-sm {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+  }
+
+  /* METRICS */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .metric {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+  }
+  .metric-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+  .metric-value { font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 500; color: var(--green); }
+  .metric-sub { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+  /* TARIFAS */
+  .tarifa-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .tarifa-table th {
+    font-size: 11px; font-weight: 500; color: var(--text-light);
+    text-align: left; padding: 8px 12px 12px;
+    border-bottom: 1px solid var(--border-mid);
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .tarifa-table td { padding: 11px 12px; border-top: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+  .tarifa-table tr:first-child td { border-top: none; }
+  .tarifa-table tr:hover td { background: var(--green-pale); }
+  .ahorro {
+    display: inline-block;
+    font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 20px;
+    background: var(--green-pale); color: var(--green);
+  }
+  .tarifa-precio { font-weight: 500; color: var(--green); white-space: nowrap; }
+  .tarifa-sep td { background: var(--bg); font-size: 11px; color: var(--text-light); letter-spacing: .08em; text-transform: uppercase; padding: 8px 12px; }
+
+  /* FASES */
+  .fase {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .fase-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .fase-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--green); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500; flex-shrink: 0;
+  }
+  .fase-title { font-size: 15px; font-weight: 500; flex: 1; }
+  .fase-time {
+    font-size: 12px; color: var(--green);
+    background: var(--green-pale);
+    padding: 3px 10px; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .fase-body { padding: 8px 24px 16px; }
+  .task {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .task:last-child { border-bottom: none; }
+  .task-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green-mid); margin-top: 7px; flex-shrink: 0;
+  }
+  .task-main { font-size: 14px; color: var(--text); }
+  .task-note { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+
+  /* TERRENOS */
+  .terrenos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .terreno-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+  }
+  .terreno-card.best { border: 2px solid var(--green); }
+  .terreno-badge {
+    font-size: 11px; font-weight: 500;
+    background: var(--green); color: white;
+    padding: 2px 10px; border-radius: 20px;
+    display: inline-block; margin-bottom: 10px;
+  }
+  .terreno-name { font-size: 15px; font-weight: 500; margin-bottom: 14px; }
+  .terreno-row {
+    display: flex; justify-content: space-between;
+    font-size: 13px; padding: 5px 0;
+    border-top: 1px solid var(--border);
+  }
+  .terreno-row:first-of-type { border-top: none; }
+  .terreno-lbl { color: var(--text-light); }
+  .terreno-val { color: var(--text); font-weight: 400; }
+
+  /* INVERSION */
+  .inv-row {
+    display: flex; justify-content: space-between;
+    align-items: center; padding: 10px 0;
+    font-size: 14px; border-top: 1px solid var(--border);
+  }
+  .inv-row:first-child { border-top: none; }
+  .inv-label { color: var(--text); }
+  .inv-range { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .inv-total {
+    display: flex; justify-content: space-between;
+    padding: 14px 0 0; margin-top: 8px;
+    border-top: 2px solid var(--green);
+    font-size: 15px; font-weight: 500;
+  }
+
+  /* MODELO FINANCIERO */
+  .modelo-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .info-note {
+    background: var(--green-pale);
+    border: 1px solid var(--green-mid);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--green);
+    margin-bottom: 24px;
+  }
+  .slider-row {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 16px;
+  }
+  .slider-label { font-size: 13px; color: var(--text-muted); min-width: 180px; }
+  .slider-row input[type=range] {
+    flex: 1; height: 4px;
+    -webkit-appearance: none; appearance: none;
+    background: var(--green-mid); border-radius: 2px; outline: none;
+  }
+  .slider-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 18px; height: 18px;
+    border-radius: 50%; background: var(--green);
+    cursor: pointer; border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .slider-val { font-size: 13px; font-weight: 500; min-width: 70px; text-align: right; color: var(--text); }
+  .furgo-msg {
+    border-radius: var(--radius-sm);
+    padding: 12px 16px; font-size: 13px;
+    margin: 16px 0; transition: background .3s, color .3s;
+  }
+  .furgo-msg.mokka { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+  .furgo-msg.active { background: var(--amber-pale); color: var(--amber); border: 1px solid rgba(196,127,26,0.3); }
+  .result-row {
+    display: flex; justify-content: space-between;
+    padding: 8px 0; font-size: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .result-row:first-child { border-top: none; }
+  .result-lbl { color: var(--text-muted); }
+  .result-val { font-weight: 500; font-variant-numeric: tabular-nums; }
+  .result-total {
+    display: flex; justify-content: space-between;
+    padding: 14px 0 0; margin-top: 6px;
+    border-top: 2px solid var(--green);
+    font-size: 16px; font-weight: 500;
+  }
+  .pos { color: var(--green); }
+  .neg { color: #c0392b; }
+  .be-bar { height: 8px; background: var(--green-pale); border-radius: 4px; margin: 16px 0 8px; overflow: hidden; }
+  .be-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width .4s ease; }
+  .be-lbl { font-size: 12px; color: var(--text-light); }
+
+  /* PALANCAS */
+  .palancas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .palanca {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .palanca-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .palanca-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .palanca-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  .badge-g { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: var(--green-pale); color: var(--green); font-weight: 500; }
+  .badge-a { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: var(--amber-pale); color: var(--amber); font-weight: 500; }
+
+  /* FOOTER */
+  footer {
+    background: var(--green);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 32px 24px;
+    font-size: 13px;
+  }
+  footer strong { color: rgba(255,255,255,0.8); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 50px 20px 40px; }
+    .hero-stats { gap: 24px; }
+    .container { padding: 40px 16px; }
+    .terrenos-grid { grid-template-columns: 1fr; }
+    .palancas-grid { grid-template-columns: 1fr; }
+    .slider-label { min-width: 130px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Business Plan · Madrid · 2025</div>
+  <h1>Guardería canina<br><em>de campo</em></h1>
+  <p class="hero-sub">Tu perro pasa el día en el campo. Nosotros lo recogemos en casa y te lo devolvemos dentro.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-val">~6–13k€</span>
+      <span class="hero-stat-lbl">Inversión arranque</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">3–4</span>
+      <span class="hero-stat-lbl">Perros para break-even</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">350€</span>
+      <span class="hero-stat-lbl">Bono mensual máx.</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">42%</span>
+      <span class="hero-stat-lbl">Ahorro bono 5d/sem</span>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <a href="#propuesta">Propuesta</a>
+  <a href="#tarifas">Tarifas</a>
+  <a href="#terrenos">Terrenos</a>
+  <a href="#fases">Fases</a>
+  <a href="#inversion">Inversión</a>
+  <a href="#modelo">Modelo</a>
+  <a href="#palancas">Palancas</a>
+</nav>
+
+<div class="container">
+
+  <!-- PROPUESTA DE VALOR -->
+  <section class="section" id="propuesta">
+    <div class="section-label">Concepto</div>
+    <div class="section-title">Propuesta de valor</div>
+    <div class="metrics-grid">
+      <div class="metric"><div class="metric-label">Modelo</div><div class="metric-value">Campo</div><div class="metric-sub">No en local cerrado</div></div>
+      <div class="metric"><div class="metric-label">Recogida</div><div class="metric-value">En casa</div><div class="metric-sub">Te damos la llave</div></div>
+      <div class="metric"><div class="metric-label">Seguridad</div><div class="metric-value">GPS + cam</div><div class="metric-sub">Geovalla y live cam</div></div>
+      <div class="metric"><div class="metric-label">Veterinario</div><div class="metric-value">Incluido</div><div class="metric-sub">Colaborador fijo</div></div>
+    </div>
+    <div class="card">
+      <div class="task"><div class="task-dot"></div><div><div class="task-main">Guardería canina en campo abierto — no hay nada igual en Madrid</div></div></div>
+      <div class="task"><div class="task-dot"></div><div><div class="task-main">Recogida y devolución dentro del domicilio con llave</div><div class="task-note">Máxima comodidad. El dueño no tiene que hacer nada.</div></div></div>
+      <div class="task"><div class="task-dot"></div><div><div class="task-main">Cámara IP en tiempo real — los dueños ven a su perro durante el día</div></div></div>
+      <div class="task"><div class="task-dot"></div><div><div class="task-main">GPS Tractive individual con geovalla y alerta de escape</div></div></div>
+      <div class="task"><div class="task-dot"></div><div><div class="task-main">Veterinario colaborador — vacunas, desparasitaciones y emergencias</div></div></div>
+      <div class="task"><div class="task-dot"></div><div><div class="task-main">Adiestramiento para cachorros incluido en pack cachorro</div></div></div>
+      <div class="task"><div class="task-dot"></div><div><div class="task-main">Foto diaria por WhatsApp a cada dueño</div><div class="task-note">Fideliza y genera contenido para RRSS</div></div></div>
+    </div>
+  </section>
+
+  <!-- TARIFAS -->
+  <section class="section" id="tarifas">
+    <div class="section-label">Pricing</div>
+    <div class="section-title">Estructura de tarifas</div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table class="tarifa-table">
+        <thead>
+          <tr><th>Producto</th><th>Días/mes</th><th>Precio</th><th>Ahorro</th></tr>
+        </thead>
+        <tbody>
+          <tr class="tarifa-sep"><td colspan="4">Días sueltos</td></tr>
+          <tr><td>Día suelto sin ruta</td><td>—</td><td class="tarifa-precio">25€/día</td><td>—</td></tr>
+          <tr><td>Día suelto con ruta (recogida + devolución)</td><td>—</td><td class="tarifa-precio">30€/día</td><td>—</td></tr>
+          <tr class="tarifa-sep"><td colspan="4">Bonos mensuales — ruta incluida</td></tr>
+          <tr><td>Bono 1 día/semana</td><td>~4 días</td><td class="tarifa-precio">100€/mes</td><td><span class="ahorro">–17%</span></td></tr>
+          <tr><td>Bono 2 días/semana</td><td>~8 días</td><td class="tarifa-precio">180€/mes</td><td><span class="ahorro">–25%</span></td></tr>
+          <tr><td>Bono 3 días/semana</td><td>~12 días</td><td class="tarifa-precio">240€/mes</td><td><span class="ahorro">–33%</span></td></tr>
+          <tr><td>Bono 4 días/semana</td><td>~16 días</td><td class="tarifa-precio">300€/mes</td><td><span class="ahorro">–37%</span></td></tr>
+          <tr><td>Bono 5 días/semana</td><td>~20 días</td><td class="tarifa-precio">350€/mes</td><td><span class="ahorro">–42%</span></td></tr>
+          <tr class="tarifa-sep"><td colspan="4">Packs especiales</td></tr>
+          <tr><td>Pack hermanos — 2 perros misma casa (bono 5d)</td><td>~20 días</td><td class="tarifa-precio">560€/mes</td><td><span class="ahorro">–40% 2º perro</span></td></tr>
+          <tr><td>Pack cachorro — 3 meses + adiestramiento</td><td>~20 días</td><td class="tarifa-precio">300€/mes</td><td>precio entrada</td></tr>
+          <tr><td>Pack verano julio–agosto</td><td>~20 días</td><td class="tarifa-precio">380€/mes</td><td>servicio reforzado</td></tr>
+          <tr><td>Bono premium mensual + baño</td><td>~20 días</td><td class="tarifa-precio">400€/mes</td><td>baño incluido</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TERRENOS -->
+  <section class="section" id="terrenos">
+    <div class="section-label">Ubicación</div>
+    <div class="section-title">Terrenos candidatos</div>
+    <div class="info-note">Filtro aplicado: agua confirmada + zona norte (A-1) + alquiler. En ambos casos negociar opción a compra con precio fijado hoy.</div>
+    <div class="terrenos-grid">
+      <div class="terreno-card best">
+        <div class="terreno-badge">⭐ Opción preferida</div>
+        <div class="terreno-name">San Agustín del Guadalix<br><span style="font-size:12px;color:var(--text-light);font-weight:300">Polígono 8, Parcela 75</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Precio</span><span class="terreno-val">690€/mes</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Superficie</span><span class="terreno-val">19.786 m²</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Agua</span><span class="terreno-val">Pozo ✅</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Luz</span><span class="terreno-val">Sí ✅</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Vallado</span><span class="terreno-val">Sí ✅</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Acceso</span><span class="terreno-val">Camino tierra</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Zona</span><span class="terreno-val">Norte A-1</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Opción compra</span><span class="terreno-val">Preguntar</span></div>
+      </div>
+      <div class="terreno-card">
+        <div class="terreno-name">Guadarrama<br><span style="font-size:12px;color:var(--text-light);font-weight:300">Camino de Pradovera, 30</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Precio</span><span class="terreno-val">600€/mes</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Superficie</span><span class="terreno-val">10.000 m²</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Agua</span><span class="terreno-val">Pozo ✅</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Luz</span><span class="terreno-val">Preguntar ❓</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Vallado</span><span class="terreno-val">Completo ✅</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Acceso</span><span class="terreno-val">Asfaltado ✅</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Zona</span><span class="terreno-val">Norte A-6 (55km)</span></div>
+        <div class="terreno-row"><span class="terreno-lbl">Opción compra</span><span class="terreno-val">Preguntar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FASES -->
+  <section class="section" id="fases">
+    <div class="section-label">Roadmap</div>
+    <div class="section-title">Fases de arranque</div>
+
+    <div class="fase">
+      <div class="fase-header">
+        <div class="fase-num">1</div>
+        <div class="fase-title">Estructura legal</div>
+        <div class="fase-time">~1 mes · reducible</div>
+      </div>
+      <div class="fase-body">
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Constituir autónomo o SL</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Elegir terreno y negociar alquiler con opción a compra</div><div class="task-note">Confirmar agua, luz y compatibilidad con actividad canina antes de firmar</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Consultar gestor de licencias sobre viabilidad en el municipio elegido</div><div class="task-note">Preguntar plazos reales para licencia de actividad y núcleo zoológico</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Contactar veterinario para memoria técnica del núcleo zoológico</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Contratar seguro de responsabilidad civil para centro canino</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Redactar contrato de servicio con cláusulas de acceso a domicilio</div></div></div>
+      </div>
+    </div>
+
+    <div class="fase">
+      <div class="fase-header">
+        <div class="fase-num">2</div>
+        <div class="fase-title">Instalación mínima viable</div>
+        <div class="fase-time">~1 mes · reducible</div>
+      </div>
+      <div class="fase-body">
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Instalar 2–3 corrales iniciales por tamaño de perro</div><div class="task-note">Malla metálica con postes y base de hormigón. Ampliar con la caja del negocio.</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Zona de sombra y bebederos automáticos</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Cámaras IP en corrales con app accesible para los clientes</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">GPS Tractive — 8 unidades</div><div class="task-note">Verificar cobertura móvil LTE en el terreno antes de comprar</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Acondicionar Opel Mokka — arneses de seguridad en asiento trasero</div><div class="task-note">Válido hasta el 4º perro. Sin coste de furgoneta en el arranque.</div></div></div>
+      </div>
+    </div>
+
+    <div class="fase">
+      <div class="fase-header">
+        <div class="fase-num">3</div>
+        <div class="fase-title">Pre-apertura</div>
+        <div class="fase-time">~1 mes · reducible</div>
+      </div>
+      <div class="fase-body">
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Crear RRSS — Instagram y TikTok desde el primer día de obra</div><div class="task-note">Documentar la instalación genera expectativa. Lista de espera antes de abrir.</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Web básica con tarifas, formulario de alta y pasarela de pago</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Alta en Google Business Profile</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Cerrar acuerdo con veterinario colaborador</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Acuerdos con tiendas caninas, peluquerías y clínicas para referidos</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Campaña precio de fundador — primeros 10 clientes con descuento</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Días de prueba con 3–5 perros antes de cobrar</div><div class="task-note">Detectar problemas operativos sin riesgo reputacional</div></div></div>
+      </div>
+    </div>
+
+    <div class="fase">
+      <div class="fase-header">
+        <div class="fase-num" style="background:var(--amber)">4</div>
+        <div class="fase-title">Operación</div>
+        <div class="fase-time" style="background:var(--amber-pale);color:var(--amber)">día a día</div>
+      </div>
+      <div class="fase-body">
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Recogida 7:30–9:30 / devolución 17:00–19:30</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Foto diaria por WhatsApp a cada dueño</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Cobro mensual automatizado el día 1 de cada mes</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Protocolo de emergencia veterinaria activo desde el primer día</div></div></div>
+        <div class="task"><div class="task-dot"></div><div><div class="task-main">Alquilar furgoneta al llegar al 4º perro (~800€/mes)</div><div class="task-note">Hasta entonces: Mokka con arneses en asiento trasero</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVERSIÓN -->
+  <section class="section" id="inversion">
+    <div class="section-label">Financiero</div>
+    <div class="section-title">Inversión inicial</div>
+    <div class="info-note">Sin furgoneta — entra cuando el negocio la justifica (4º perro)</div>
+    <div class="card">
+      <div class="inv-row"><span class="inv-label">Corrales iniciales 2–3 (malla + postes + hormigón base)</span><span class="inv-range">1.500 – 3.000€</span></div>
+      <div class="inv-row"><span class="inv-label">Zona de sombra y bebederos automáticos</span><span class="inv-range">1.000 – 2.000€</span></div>
+      <div class="inv-row"><span class="inv-label">Cámaras IP (4–6 unidades)</span><span class="inv-range">300 – 900€</span></div>
+      <div class="inv-row"><span class="inv-label">GPS Tractive 8 unidades + suscripción año 1</span><span class="inv-range">784€</span></div>
+      <div class="inv-row"><span class="inv-label">Arneses seguridad Mokka (asiento trasero)</span><span class="inv-range">100 – 200€</span></div>
+      <div class="inv-row"><span class="inv-label">Web + setup RRSS</span><span class="inv-range">300 – 800€</span></div>
+      <div class="inv-row"><span class="inv-label">Gestor licencias + veterinario memoria técnica</span><span class="inv-range">1.000 – 2.500€</span></div>
+      <div class="inv-row"><span class="inv-label">Seguro RC año 1</span><span class="inv-range">500 – 1.200€</span></div>
+      <div class="inv-row"><span class="inv-label">Fianza terreno (1–2 meses)</span><span class="inv-range">690 – 1.380€</span></div>
+      <div class="inv-total"><span>Total estimado</span><span style="color:var(--green)">6.174 – 12.764€</span></div>
+    </div>
+  </section>
+
+  <!-- MODELO FINANCIERO -->
+  <section class="section" id="modelo">
+    <div class="section-label">Simulador</div>
+    <div class="section-title">Modelo financiero mensual</div>
+    <div class="modelo-card">
+      <div class="info-note">Todos los valores son <strong>mensuales</strong> — resultado de un mes concreto, no acumulado. La furgoneta entra automáticamente a partir del 4º perro.</div>
+
+      <div class="slider-row">
+        <span class="slider-label">Perros en bono mensual</span>
+        <input type="range" min="1" max="20" value="5" step="1" id="sl-p">
+        <span class="slider-val" id="out-p">5</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Tarifa media por perro</span>
+        <input type="range" min="100" max="400" value="260" step="20" id="sl-t">
+        <span class="slider-val" id="out-t">260€</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Alquiler terreno</span>
+        <input type="range" min="400" max="1000" value="690" step="10" id="sl-terreno">
+        <span class="slider-val" id="out-terreno">690€</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Otros costes fijos/mes</span>
+        <input type="range" min="100" max="600" value="350" step="50" id="sl-otros">
+        <span class="slider-val" id="out-otros">350€</span>
+      </div>
+
+      <div class="furgo-msg mokka" id="furgo-msg">
+        🚗 <span id="furgo-txt">Usando Mokka con arneses — coste furgoneta: 0€. Furgoneta entra en el perro nº4.</span>
+      </div>
+
+      <div style="border-top:1px solid var(--border);padding-top:16px">
+        <div class="result-row"><span class="result-lbl">Ingresos mensuales</span><span class="result-val" id="r-ing">—</span></div>
+        <div class="result-row"><span class="result-lbl">Terreno</span><span class="result-val" id="r-terr">—</span></div>
+        <div class="result-row"><span class="result-lbl">Furgoneta</span><span class="result-val" id="r-furgo">—</span></div>
+        <div class="result-row"><span class="result-lbl">Otros costes fijos</span><span class="result-val" id="r-otros">—</span></div>
+        <div class="result-total">
+          <span>Resultado mensual</span>
+          <span class="result-val" id="r-result" style="font-size:18px">—</span>
+        </div>
+        <div class="result-row" style="margin-top:8px"><span class="result-lbl">Margen sobre ingresos</span><span class="result-val" id="r-margen">—</span></div>
+      </div>
+
+      <div style="margin-top:20px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-light);margin-bottom:6px">
+          <span>Progreso hacia break-even</span>
+          <span id="be-pct">—</span>
+        </div>
+        <div class="be-bar"><div class="be-fill" id="be-fill" style="width:0%"></div></div>
+        <div class="be-lbl" id="be-lbl">—</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PALANCAS -->
+  <section class="section" id="palancas">
+    <div class="section-label">Aceleración</div>
+    <div class="section-title">Palancas para crecer más rápido</div>
+    <div class="palancas-grid">
+      <div class="palanca">
+        <div class="palanca-header"><span class="palanca-title">Precio de fundador</span><span class="badge-g">inmediato</span></div>
+        <div class="palanca-desc">Primeros 10 clientes con descuento. Genera reseñas y boca a boca desde el día 1.</div>
+      </div>
+      <div class="palanca">
+        <div class="palanca-header"><span class="palanca-title">Pack hermanos</span><span class="badge-g">inmediato</span></div>
+        <div class="palanca-desc">2 perros misma casa a 560€/mes. Misma recogida, casi el doble de ingreso por parada.</div>
+      </div>
+      <div class="palanca">
+        <div class="palanca-header"><span class="palanca-title">RRSS antes de abrir</span><span class="badge-g">inmediato</span></div>
+        <div class="palanca-desc">Documentar la instalación en TikTok e Instagram. Lista de espera antes de la apertura.</div>
+      </div>
+      <div class="palanca">
+        <div class="palanca-header"><span class="palanca-title">Acuerdos referidos</span><span class="badge-a">fase 3</span></div>
+        <div class="palanca-desc">Tiendas caninas, clínicas vet, peluquerías. Comisión por cliente referido o descuento cruzado.</div>
+      </div>
+      <div class="palanca">
+        <div class="palanca-header"><span class="palanca-title">Pack verano</span><span class="badge-a">estacional</span></div>
+        <div class="palanca-desc">Julio–agosto: poca oferta, alta demanda. 380€/mes con servicio reforzado.</div>
+      </div>
+      <div class="palanca">
+        <div class="palanca-header"><span class="palanca-title">Segunda ruta</span><span class="badge-a">fase 4+</span></div>
+        <div class="palanca-desc">Segunda furgoneta duplica capacidad sin duplicar los costes fijos del terreno.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <strong>Guardería Canina de Campo — Madrid</strong><br>
+  Business Plan · Documento de trabajo · 2025
+</footer>
+
+<script>
+const fmt = n => n.toLocaleString('es-ES') + '€';
+const FURGO_UMBRAL = 4;
+const FURGO_COSTE = 800;
+
+function calc() {
+  const p = parseInt(document.getElementById('sl-p').value);
+  const t = parseInt(document.getElementById('sl-t').value);
+  const terreno = parseInt(document.getElementById('sl-terreno').value);
+  const otros = parseInt(document.getElementById('sl-otros').value);
+
+  document.getElementById('out-p').textContent = p;
+  document.getElementById('out-t').textContent = t + '€';
+  document.getElementById('out-terreno').textContent = terreno + '€';
+  document.getElementById('out-otros').textContent = otros + '€';
+
+  const usaFurgo = p >= FURGO_UMBRAL;
+  const furgoCoste = usaFurgo ? FURGO_COSTE : 0;
+
+  const fmsg = document.getElementById('furgo-msg');
+  const ftxt = document.getElementById('furgo-txt');
+  if (usaFurgo) {
+    fmsg.className = 'furgo-msg active';
+    ftxt.textContent = p + ' perros → furgoneta activa: 800€/mes';
+  } else {
+    fmsg.className = 'furgo-msg mokka';
+    ftxt.textContent = 'Usando Mokka con arneses — 0€. Furgoneta entra en el perro nº' + FURGO_UMBRAL + '.';
+  }
+
+  const ingresos = p * t;
+  const costes = terreno + furgoCoste + otros;
+  const resultado = ingresos - costes;
+  const margen = ingresos > 0 ? Math.round((resultado / ingresos) * 100) : 0;
+  const pct = Math.min(100, Math.max(0, Math.round((ingresos / costes) * 100)));
+
+  document.getElementById('r-ing').textContent = fmt(ingresos);
+  document.getElementById('r-terr').textContent = fmt(terreno);
+  document.getElementById('r-furgo').textContent = fmt(furgoCoste);
+  document.getElementById('r-otros').textContent = fmt(otros);
+
+  const rEl = document.getElementById('r-result');
+  rEl.textContent = (resultado >= 0 ? '+' : '') + fmt(resultado);
+  rEl.className = 'result-val ' + (resultado >= 0 ? 'pos' : 'neg');
+
+  const mEl = document.getElementById('r-margen');
+  mEl.textContent = margen + '%';
+  mEl.className = 'result-val ' + (margen >= 0 ? 'pos' : 'neg');
+
+  document.getElementById('be-fill').style.width = pct + '%';
+  document.getElementById('be-pct').textContent = pct + '%';
+
+  const perrosNecesarios = Math.ceil(costes / t);
+  const beLbl = resultado >= 0
+    ? 'Break-even alcanzado — beneficio de ' + fmt(resultado) + '/mes'
+    : 'Necesitas ' + perrosNecesarios + ' perros para break-even (te faltan ' + Math.max(0, perrosNecesarios - p) + ')';
+  document.getElementById('be-lbl').textContent = beLbl;
+}
+
+['sl-p','sl-t','sl-terreno','sl-otros'].forEach(id => {
+  document.getElementById(id).addEventListener('input', calc);
+});
+calc();
+</script>
+</body>
+</html>
