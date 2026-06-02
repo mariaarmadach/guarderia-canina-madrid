@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benchmark Guarderías Caninas — Madrid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1a5c3a;--green-pale:#e8f4ee;--green-mid:#c5e0d0;--amber:#c47f1a;--amber-pale:#fdf3e0;--blue:#185FA5;--blue-pale:#E6F1FB;--text:#1a1a18;--text-muted:#5a5a52;--text-light:#8a8a7e;--bg:#f9f7f2;--white:#ffffff;--border:rgba(26,92,58,0.12);--border-mid:rgba(26,92,58,0.22);--r:12px;--rp:20px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Quicksand',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+.hero{background:var(--green);color:white;padding:48px 32px 36px;text-align:center}
+.hero-tag{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px}
+.hero h1{font-family:'Nunito',sans-serif;font-size:clamp(24px,4vw,40px);font-weight:800;margin-bottom:8px}
+.hero h1 em{font-style:italic;color:#a8d5b8}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.6);font-weight:300;max-width:480px;margin:0 auto}
+.container{max-width:1200px;margin:0 auto;padding:28px 20px 60px}
+.slabel{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.stitle{font-family:'Nunito',sans-serif;font-size:20px;font-weight:700;margin-bottom:18px}
+
+/* PILLS */
+.pills-group{margin-bottom:18px}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--rp);border:1px solid var(--border-mid);font-size:12px;font-weight:500;cursor:pointer;background:var(--white);color:var(--text-muted);transition:all .15s;user-select:none}
+.pill:hover{border-color:var(--green);color:var(--green)}
+.pill.on{background:var(--green-pale);color:var(--green);border-color:var(--green)}
+.pill i{font-size:13px}
+
+/* CONTROL BAR */
+.ctrl-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 18px;position:relative}
+.ctrl-bar button,.ctrl-bar .filter-btn{font-family:'Quicksand',sans-serif;font-size:12px;font-weight:500;padding:6px 14px;cursor:pointer;border-radius:var(--rp);background:var(--white);border:1px solid var(--border-mid);color:var(--text-muted);transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.ctrl-bar button:hover,.ctrl-bar .filter-btn:hover{border-color:var(--green);color:var(--green)}
+.ctrl-bar .filter-btn.has-filters{background:var(--green);color:white;border-color:var(--green)}
+.ctrl-bar .sep{width:1px;height:20px;background:var(--border-mid)}
+.export-btn{font-family:'Quicksand',sans-serif;font-size:12px;font-weight:500;padding:6px 14px;cursor:pointer;border-radius:var(--rp);background:var(--green);border:1px solid var(--green);color:white;transition:all .15s;display:inline-flex;align-items:center;gap:5px;margin-left:auto}
+.export-btn:hover{opacity:.85}
+
+/* FILTER DROPDOWN */
+.filter-dropdown{position:absolute;top:calc(100% + 6px);left:0;z-index:100;background:var(--white);border:1px solid var(--border-mid);border-radius:var(--r);box-shadow:0 4px 20px rgba(0,0,0,.1);padding:16px;width:560px;max-width:95vw;display:none}
+.filter-dropdown.open{display:block}
+.fd-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.fd-title{font-size:12px;font-weight:600;color:var(--text)}
+.fd-clear{font-size:11px;color:var(--text-light);cursor:pointer;padding:2px 8px;border-radius:var(--rp);border:1px solid var(--border-mid);background:none;font-family:'Quicksand',sans-serif}
+.fd-clear:hover{color:var(--green);border-color:var(--green)}
+.fd-groups{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fd-group-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);margin-bottom:6px}
+.fd-chips{display:flex;flex-wrap:wrap;gap:4px}
+.fchip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:var(--rp);border:1px solid var(--border-mid);font-size:11px;font-weight:500;cursor:pointer;background:var(--white);color:var(--text-muted);user-select:none;transition:all .15s}
+.fchip:hover{border-color:var(--green);color:var(--green)}
+.fchip.fon{background:var(--green);color:white;border-color:var(--green)}
+.filter-count-badge{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:white;color:var(--green);font-size:10px;font-weight:700}
+.fd-result{font-size:11px;color:var(--text-light);margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
+.fd-result strong{color:var(--green)}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border-mid);margin-bottom:10px}
+table{border-collapse:collapse;width:100%;font-size:12px}
+thead th{background:var(--bg);padding:9px 12px;text-align:left;font-weight:600;font-size:11px;border-bottom:1px solid var(--border-mid);white-space:nowrap;position:sticky;top:0;color:var(--text-muted)}
+thead th:first-child{position:sticky;left:0;z-index:3;background:var(--bg);min-width:155px;border-right:1px solid var(--border-mid)}
+tbody td{padding:7px 12px;border-top:1px solid var(--border);vertical-align:middle;color:var(--text-muted)}
+tbody td:first-child{position:sticky;left:0;background:var(--white);font-weight:600;color:var(--text);z-index:1;border-right:1px solid var(--border-mid)}
+tbody tr:hover td{background:var(--green-pale)}
+tbody tr:hover td:first-child{background:var(--green-pale)}
+.val-yes{color:var(--green);font-size:15px}
+.val-no{color:#c0392b;font-size:15px}
+.val-nd{color:var(--text-light)}
+.val-note{font-size:11px;color:var(--text-light);display:block;margin-top:1px}
+.empty-msg{text-align:center;padding:2rem;color:var(--text-light);font-size:13px;grid-column:1/-1}
+
+/* LEGEND */
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text-light);margin-bottom:36px;padding:8px 14px;background:var(--white);border-radius:6px;border:1px solid var(--border)}
+.legend span{display:flex;align-items:center;gap:4px}
+
+/* CONCLUSIONS */
+.conclusions{border-top:1px solid var(--border-mid);padding-top:28px}
+.concl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:20px}
+.cm{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px}
+.cm-lbl{font-size:10px;color:var(--text-light);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.cm-val{font-family:'Nunito',sans-serif;font-size:24px;font-weight:700;color:var(--green)}
+.cm-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+.cb{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:10px}
+.cb h3{font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.cb h3 i{color:var(--green);font-size:14px}
+.cr{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.cr:last-child{border-bottom:none}
+.cr-l{color:var(--text-muted)}
+.cr-v{font-weight:600;color:var(--text)}
+.cr-v.hi{color:var(--green)}
+.cr-v.wa{color:var(--amber)}
+.bc{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:500}
+.bc.campo{background:var(--green-pale);color:var(--green)}
+.bc.local{background:var(--blue-pale);color:var(--blue)}
+.insight{border-radius:var(--r);padding:12px 16px;margin-bottom:8px;font-size:12px;display:flex;gap:9px;align-items:flex-start}
+.insight.green{background:var(--green-pale);border:1px solid var(--green-mid);color:var(--green)}
+.insight.amber{background:var(--amber-pale);border:1px solid rgba(196,127,26,.3);color:var(--amber)}
+.insight i{font-size:15px;flex-shrink:0;margin-top:1px}
+.insights-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.t3{list-style:none}
+.t3 li{display:flex;align-items:flex-start;gap:9px;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px}
+.t3 li:last-child{border-bottom:none}
+.t3-r{font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;color:var(--green);min-width:20px}
+.t3-n{font-weight:600;color:var(--text)}
+.t3-d{color:var(--text-muted);font-size:11px;margin-top:2px}
+.no-data{color:var(--text-light);font-size:12px;font-style:italic;padding:4px 0}
+
+footer{background:var(--green);color:rgba(255,255,255,.5);text-align:center;padding:20px;font-size:12px}
+footer strong{color:rgba(255,255,255,.8)}
+
+@media print{
+  .hero{padding:24px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ctrl-bar,.pills-group,.legend,.filter-dropdown,footer,.table-wrap,.no-print{display:none!important}
+  .conclusions{border-top:none}
+  .cm,.cb,.insight{break-inside:avoid;border:1px solid #ccc!important}
+}
+@media(max-width:600px){.fd-groups{grid-template-columns:1fr}.insights-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Análisis competitivo · Madrid · 2025</div>
+  <h1>Benchmark<br><em>guarderías caninas</em></h1>
+  <p class="hero-sub">Selecciona competidores y variables · filtra y exporta conclusiones</p>
+</div>
+
+<div class="container">
+
+  <div class="pills-group no-print">
+    <div class="slabel">Competidores</div>
+    <div class="pills" id="comp-pills"></div>
+  </div>
+
+  <div class="pills-group no-print">
+    <div class="slabel">Variables</div>
+    <div class="pills" id="var-pills"></div>
+  </div>
+
+  <div class="ctrl-bar no-print" id="ctrl-bar">
+    <button onclick="selAll('comp')">Todos</button>
+    <button onclick="noneAll('comp')">Ninguno</button>
+    <div class="sep"></div>
+    <button onclick="selAll('var')">Todas las variables</button>
+    <button onclick="noneAll('var')">Ninguna</button>
+    <div class="sep"></div>
+    <button class="filter-btn" id="filter-toggle-btn" onclick="toggleDropdown()">
+      Filtrar
+      <span class="filter-count-badge" id="filter-badge" style="display:none"></span>
+    </button>
+    <button class="export-btn" onclick="exportPDF()">Exportar conclusiones PDF</button>
+
+    <div class="filter-dropdown" id="filter-dropdown">
+      <div class="fd-header">
+        <span class="fd-title">Filtrar competidores por característica</span>
+        <button class="fd-clear" onclick="clearFilters()">Limpiar filtros</button>
+      </div>
+      <div class="fd-groups">
+        <div>
+          <div class="fd-group-label">País</div>
+          <div class="fd-chips">
+            <span class="fchip" data-filter="pais" data-val="España" onclick="toggleFilter(this)">España</span>
+            <span class="fchip" data-filter="pais" data-val="internacional" onclick="toggleFilter(this)">Internacional</span>
+          </div>
+        </div>
+        <div>
+          <div class="fd-group-label">Tipo de ubicación</div>
+          <div class="fd-chips">
+            <span class="fchip" data-filter="cat" data-val="campo" onclick="toggleFilter(this)">Campo</span>
+            <span class="fchip" data-filter="cat" data-val="local" onclick="toggleFilter(this)">Local</span>
+          </div>
+        </div>
+        <div>
+          <div class="fd-group-label">Servicios</div>
+          <div class="fd-chips">
+            <span class="fchip" data-filter="guarderia_dia" data-val="si" onclick="toggleFilter(this)">Guardería día</span>
+            <span class="fchip" data-filter="peluqueria" data-val="si" onclick="toggleFilter(this)">Peluquería</span>
+            <span class="fchip" data-filter="veterinario" data-val="si" onclick="toggleFilter(this)">Veterinario</span>
+            <span class="fchip" data-filter="adiestramiento" data-val="si" onclick="toggleFilter(this)">Adiestramiento</span>
+            <span class="fchip" data-filter="piscina" data-val="si" onclick="toggleFilter(this)">Piscina</span>
+          </div>
+        </div>
+        <div>
+          <div class="fd-group-label">Logística</div>
+          <div class="fd-chips">
+            <span class="fchip" data-filter="recogida" data-val="si" onclick="toggleFilter(this)">Con recogida</span>
+            <span class="fchip" data-filter="recogida_incluida" data-val="si" onclick="toggleFilter(this)">Recogida incluida</span>
+            <span class="fchip" data-filter="devolucion_casa" data-val="si" onclick="toggleFilter(this)">Devolución en casa</span>
+            <span class="fchip" data-filter="camara" data-val="si" onclick="toggleFilter(this)">Cámara en vivo</span>
+          </div>
+        </div>
+        <div>
+          <div class="fd-group-label">Disponibilidad</div>
+          <div class="fd-chips">
+            <span class="fchip" data-filter="apertura_verano" data-val="si" onclick="toggleFilter(this)">Abren en verano</span>
+            <span class="fchip" data-filter="precio_publica" data-val="si" onclick="toggleFilter(this)">Publica precios</span>
+            <span class="fchip" data-filter="dia_prueba" data-val="si" onclick="toggleFilter(this)">Día de prueba</span>
+          </div>
+        </div>
+      </div>
+      <div class="fd-result" id="fd-result"></div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table id="bk-table">
+      <thead id="bk-head"></thead>
+      <tbody id="bk-body"></tbody>
+    </table>
+  </div>
+
+  <div class="legend no-print">
+    <span>✓ Confirmado</span>
+    <span>✗ No disponible</span>
+    <span>— No verificado</span>
+    <span style="margin-left:auto;font-style:italic">Datos verificados de webs oficiales · 2025</span>
+  </div>
+
+  <div class="conclusions" id="conclusions">
+    <div class="slabel">Conclusiones</div>
+    <div class="stitle" id="concl-title">Análisis de los competidores seleccionados</div>
+    <div id="concl-content"></div>
+  </div>
+
+</div>
+
+<footer class="no-print">
+  <strong>Benchmark Guarderías Caninas · Madrid</strong> · Documento de trabajo · 2025
+</footer>
+
+<script>
+const COMPS = [
+  {id:'canscollege',name:"Can's College",data:{pais:'España',tipo:'Campo (40.000 m², Cotos Monterrey)',cat:'campo',guarderia_dia:'✓',recogida:'✓',devolucion_casa:'✓',precio_dia_num:null,precio_dia:'— (no publicado)',bono_mensual_num:null,bono_mensual:'— (no publicado)',superficie_num:40000,superficie:'40.000 m²',instalaciones:1,camara:'—',gps:'—',peluqueria:'—',veterinario:'✓',adiestramiento:'✓',piscina:'—',horario:'L–V 7:30–15:30',apertura_verano:'—',dia_prueba:'✓',precio_publica:'✗',recogida_incluida:'✓',antiguedad:2024}},
+  {id:'madridcanino',name:'Madrid Canino',data:{pais:'España',tipo:'Local (8.000 m² vallados)',cat:'local',guarderia_dia:'✓',recogida:'✓',devolucion_casa:'✗',precio_dia_num:null,precio_dia:'— (no publicado)',bono_mensual_num:null,bono_mensual:'— (no publicado)',superficie_num:8000,superficie:'8.000 m²',instalaciones:1,camara:'—',gps:'—',peluqueria:'—',veterinario:'—',adiestramiento:'✓',piscina:'—',horario:'L–V',apertura_verano:'—',dia_prueba:'✓',precio_publica:'✗',recogida_incluida:'—',antiguedad:null}},
+  {id:'vallecan',name:'Vallecan',data:{pais:'España',tipo:'Local (5 min Plaza Castilla)',cat:'local',guarderia_dia:'✓',recogida:'✗',devolucion_casa:'✗',precio_dia_num:null,precio_dia:'— (no publicado)',bono_mensual_num:null,bono_mensual:'— (bonos días y meses)',superficie_num:null,superficie:'—',instalaciones:1,camara:'—',gps:'—',peluqueria:'✓',veterinario:'✓',adiestramiento:'✓',piscina:'—',horario:'L–V 8:00–19:00 (sept–jun)',apertura_verano:'✗',dia_prueba:'—',precio_publica:'✗',recogida_incluida:'✗',antiguedad:1979}},
+  {id:'gufy',name:'Centro Canino Gufy',data:{pais:'España',tipo:'Local (Ctra Fuencarral-El Pardo)',cat:'local',guarderia_dia:'✓',recogida:'✓',devolucion_casa:'—',precio_dia_num:null,precio_dia:'— (no publicado)',bono_mensual_num:null,bono_mensual:'— (no publicado)',superficie_num:null,superficie:'—',instalaciones:1,camara:'—',gps:'—',peluqueria:'✓',veterinario:'✓',adiestramiento:'✓',piscina:'—',horario:'—',apertura_verano:'—',dia_prueba:'—',precio_publica:'✗',recogida_incluida:'—',antiguedad:1984}},
+  {id:'covis',name:'Covis Madrid',data:{pais:'España',tipo:'Local (Chamartín)',cat:'local',guarderia_dia:'✓',recogida:'✗',devolucion_casa:'✗',precio_dia_num:30,precio_dia:'30€',bono_mensual_num:380,bono_mensual:'380€/mes (20 días)',superficie_num:null,superficie:'local urbano',instalaciones:1,camara:'—',gps:'—',peluqueria:'✓',veterinario:'✓',adiestramiento:'✓',piscina:'—',horario:'L–V',apertura_verano:'—',dia_prueba:'✓',precio_publica:'✓',recogida_incluida:'✗',antiguedad:null}},
+  {id:'wagwag',name:'WagWag',data:{pais:'España',tipo:'Local (Madrid ciudad)',cat:'local',guarderia_dia:'✓',recogida:'✗',devolucion_casa:'✗',precio_dia_num:22,precio_dia:'22€',bono_mensual_num:320,bono_mensual:'320€/mes (20 días)',superficie_num:null,superficie:'local urbano',instalaciones:1,camara:'—',gps:'—',peluqueria:'—',veterinario:'—',adiestramiento:'—',piscina:'—',horario:'L–V 8:00–20:00',apertura_verano:'—',dia_prueba:'✓',precio_publica:'✓',recogida_incluida:'✗',antiguedad:null}},
+  {id:'vivepets',name:'VivePets',data:{pais:'España',tipo:'Local (Las Rozas / SS.Reyes)',cat:'local',guarderia_dia:'✓',recogida:'✓',devolucion_casa:'✗',precio_dia_num:26,precio_dia:'desde 26€',bono_mensual_num:null,bono_mensual:'— (bonos por semana)',superficie_num:null,superficie:'—',instalaciones:2,camara:'✓',gps:'—',peluqueria:'—',veterinario:'✓',adiestramiento:'—',piscina:'—',horario:'L–V 8:00–20:00',apertura_verano:'✓',dia_prueba:'✓',precio_publica:'✓',recogida_incluida:'✗',antiguedad:null}},
+  {id:'dogcamp',name:'Dog Camp Madrid',data:{pais:'España',tipo:'Campo (600 ha, norte Madrid)',cat:'campo',guarderia_dia:'✗',recogida:'✓',devolucion_casa:'✗',precio_dia_num:25,precio_dia:'25–30€/día',bono_mensual_num:null,bono_mensual:'— (no aplica)',superficie_num:6000000,superficie:'600 ha',instalaciones:1,camara:'—',gps:'—',peluqueria:'✓',veterinario:'—',adiestramiento:'✓',piscina:'✓',horario:'365 días',apertura_verano:'✓',dia_prueba:'—',precio_publica:'✓',recogida_incluida:'✗',antiguedad:null}},
+  {id:'happycan',name:'HappyCan',data:{pais:'España',tipo:'Campo (20 ha, San Agustín Guadalix)',cat:'campo',guarderia_dia:'✗',recogida:'✓',devolucion_casa:'✗',precio_dia_num:null,precio_dia:'— (no publicado)',bono_mensual_num:null,bono_mensual:'— (no aplica)',superficie_num:200000,superficie:'20 ha',instalaciones:1,camara:'—',gps:'—',peluqueria:'✓',veterinario:'✓',adiestramiento:'—',piscina:'—',horario:'24h 365 días',apertura_verano:'✓',dia_prueba:'—',precio_publica:'✗',recogida_incluida:'✗',antiguedad:null}},
+  {id:'sierracan',name:'SierraCan',data:{pais:'España',tipo:'Campo (30.000 m², Colmenar Viejo)',cat:'campo',guarderia_dia:'✓',recogida:'✗',devolucion_casa:'✗',precio_dia_num:null,precio_dia:'— (no publicado)',bono_mensual_num:null,bono_mensual:'— (estancias con descuento)',superficie_num:30000,superficie:'30.000 m²',instalaciones:1,camara:'—',gps:'—',peluqueria:'✓',veterinario:'✓',adiestramiento:'✓',piscina:'✓',horario:'24h',apertura_verano:'✓',dia_prueba:'—',precio_publica:'✗',recogida_incluida:'✗',antiguedad:null}},
+  {id:'snau',name:'Snau',data:{pais:'España',tipo:'Local (Arganzuela, Madrid)',cat:'local',guarderia_dia:'✓',recogida:'✗',devolucion_casa:'✗',precio_dia_num:null,precio_dia:'— (no publicado)',bono_mensual_num:null,bono_mensual:'— (no publicado)',superficie_num:null,superficie:'local urbano',instalaciones:1,camara:'—',gps:'—',peluqueria:'✓',veterinario:'—',adiestramiento:'✓',piscina:'—',horario:'L–V 8:00–20:00',apertura_verano:'—',dia_prueba:'—',precio_publica:'✗',recogida_incluida:'✗',antiguedad:null}},
+  {id:'mundocan',name:'Mundocan',data:{pais:'España',tipo:'Local (Leganés)',cat:'local',guarderia_dia:'✓',recogida:'✗',devolucion_casa:'✗',precio_dia_num:17,precio_dia:'17€/día',bono_mensual_num:null,bono_mensual:'— (precio por día)',superficie_num:null,superficie:'local',instalaciones:1,camara:'—',gps:'—',peluqueria:'—',veterinario:'—',adiestramiento:'✓',piscina:'—',horario:'—',apertura_verano:'✗',dia_prueba:'—',precio_publica:'✓',recogida_incluida:'✗',antiguedad:1975}},
+  {id:'dogdaddies',name:'DogDaddies',data:{pais:'Reino Unido 🇬🇧',tipo:'Campo (5 acres, West London + Somerset)',cat:'campo',guarderia_dia:'✓',recogida:'✓',devolucion_casa:'✓',precio_dia_num:66,precio_dia:'~77€/día (66£ incl. IVA y recogida)',bono_mensual_num:null,bono_mensual:'— (facturación mensual)',superficie_num:20000,superficie:'5 acres (~20.000 m²)',instalaciones:2,camara:'—',gps:'—',peluqueria:'—',veterinario:'—',adiestramiento:'✓',piscina:'—',horario:'L–V, recogida mañana, vuelta 16:30–17:30',apertura_verano:'✓',dia_prueba:'✓',precio_publica:'✓',recogida_incluida:'✓',antiguedad:2004}},
+  {id:'campbowwow',name:'Camp Bow Wow',data:{pais:'EEUU 🇺🇸',tipo:'Local / nave (220+ centros franquicia)',cat:'local',guarderia_dia:'✓',recogida:'✗',devolucion_casa:'✗',precio_dia_num:null,precio_dia:'— (varía por franquicia)',bono_mensual_num:null,bono_mensual:'— (varía por franquicia)',superficie_num:null,superficie:'nave interior + patio',instalaciones:220,camara:'✓',gps:'—',peluqueria:'✓',veterinario:'—',adiestramiento:'✓',piscina:'—',horario:'L–D (varía)',apertura_verano:'✓',dia_prueba:'✓',precio_publica:'✗',recogida_incluida:'✗',antiguedad:2000}}
+]
+
+const VARS=[
+  {id:'pais',label:'País'},
+  {id:'tipo',label:'Ubicación y tipo'},{id:'guarderia_dia',label:'Guardería de día'},
+  {id:'recogida',label:'Recogida a domicilio'},{id:'devolucion_casa',label:'Devolución dentro de casa'},
+  {id:'precio_dia',label:'Precio día suelto'},{id:'bono_mensual',label:'Bono mensual'},
+  {id:'superficie',label:'Superficie exterior'},{id:'instalaciones',label:'Nº instalaciones'},
+  {id:'camara',label:'Cámara tiempo real'},{id:'gps',label:'GPS en perros'},
+  {id:'peluqueria',label:'Peluquería'},{id:'veterinario',label:'Veterinario'},
+  {id:'adiestramiento',label:'Adiestramiento'},{id:'piscina',label:'Piscina'},
+  {id:'horario',label:'Horario'},{id:'apertura_verano',label:'Abre en verano'},
+  {id:'dia_prueba',label:'Día de prueba'},{id:'precio_publica',label:'Publica precios'},
+  {id:'antiguedad',label:'Año de fundación'}
+]
+
+let selComps=new Set(COMPS.map(c=>c.id))
+let selVars=new Set(VARS.map(v=>v.id))
+let activeFilters={}
+let dropOpen=false
+
+// helpers
+const pct=(n,t)=>t===0?'—':Math.round(n/t*100)+'%'
+function avg(arr){const n=arr.filter(v=>v!==null&&!isNaN(v));return n.length?Math.round(n.reduce((a,b)=>a+b,0)/n.length):null}
+function isYes(v){return v==='✓'||String(v).startsWith('✓')}
+
+function matchesFilters(c){
+  for(const[k,v] of Object.entries(activeFilters)){
+    if(k==='cat'){if(c.data.cat!==v)return false}
+    else if(k==='pais'){
+      if(v==='internacional'){if(c.data.pais==='España')return false}
+      else{if(c.data.pais!==v)return false}
+    }
+    else{if(!isYes(c.data[k]))return false}
+  }
+  return true
+}
+
+function toggleDropdown(){
+  dropOpen=!dropOpen
+  document.getElementById('filter-dropdown').classList.toggle('open',dropOpen)
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#ctrl-bar'))closeDrop()
+})
+function closeDrop(){dropOpen=false;document.getElementById('filter-dropdown').classList.remove('open')}
+
+function toggleFilter(chip){
+  const k=chip.dataset.filter,v=chip.dataset.val
+  if(activeFilters[k]===v){
+    delete activeFilters[k];chip.classList.remove('fon')
+  } else {
+    document.querySelectorAll(`.fchip[data-filter="${k}"]`).forEach(c=>c.classList.remove('fon'))
+    activeFilters[k]=v;chip.classList.add('fon')
+  }
+  applyFilters();render()
+}
+
+function applyFilters(){
+  const keys=Object.keys(activeFilters)
+  if(!keys.length){COMPS.forEach(c=>selComps.add(c.id))}
+  else{selComps.clear();COMPS.filter(c=>matchesFilters(c)).forEach(c=>selComps.add(c.id))}
+  const cnt=selComps.size,tot=COMPS.length
+  document.getElementById('fd-result').innerHTML=keys.length?`Mostrando <strong>${cnt}</strong> de ${tot} competidores${cnt===0?' — <span style="color:var(--amber)">ninguno cumple todos los filtros</span>':''}`  :''
+  const badge=document.getElementById('filter-badge')
+  if(keys.length){badge.style.display='flex';badge.textContent=keys.length}else{badge.style.display='none'}
+  document.getElementById('filter-toggle-btn').classList.toggle('has-filters',keys.length>0)
+}
+
+function clearFilters(){
+  activeFilters={}
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('fon'))
+  COMPS.forEach(c=>selComps.add(c.id))
+  document.getElementById('fd-result').innerHTML=''
+  document.getElementById('filter-badge').style.display='none'
+  document.getElementById('filter-toggle-btn').classList.remove('has-filters')
+  render()
+}
+
+function renderPills(){
+  const cp=document.getElementById('comp-pills');cp.innerHTML=''
+  COMPS.forEach(c=>{
+    const p=document.createElement('span')
+    p.className='pill'+(selComps.has(c.id)?' on':'')
+    p.textContent=c.name
+    p.onclick=()=>{selComps.has(c.id)?selComps.delete(c.id):selComps.add(c.id);render()}
+    cp.appendChild(p)
+  })
+  const vp=document.getElementById('var-pills');vp.innerHTML=''
+  VARS.forEach(v=>{
+    const p=document.createElement('span')
+    p.className='pill'+(selVars.has(v.id)?' on':'')
+    p.textContent=v.label
+    p.onclick=()=>{selVars.has(v.id)?selVars.delete(v.id):selVars.add(v.id);render()}
+    vp.appendChild(p)
+  })
+}
+
+const BOOL_KEYS=['guarderia_dia','recogida','devolucion_casa','camara','gps','peluqueria','veterinario','adiestramiento','piscina','apertura_verano','dia_prueba','precio_publica','recogida_incluida']
+
+function cellVal(key,val){
+  if(key==='instalaciones')return`<span style="color:var(--text)">${val}</span>`
+  if(key==='antiguedad')return val&&val!=='—'?`<span style="color:var(--text)">${val} <span style="color:var(--text-light);font-size:11px">(${2025-parseInt(val)}a)</span></span>`:`<span style="color:var(--text-light);font-size:13px">?</span>`
+  if(BOOL_KEYS.includes(key)){
+    if(val==='✓')return`<span style="color:#1a5c3a;font-size:15px;font-weight:700">✓</span>`
+    if(val==='✗')return`<span style="color:#c0392b;font-size:15px;font-weight:700">✗</span>`
+    return`<span style="color:#8a8a7e;font-size:14px">?</span>`
+  }
+  if(!val||val==='—')return`<span style="color:var(--text-light)">—</span>`
+  if(val.startsWith('✓ '))return`<span style="color:#1a5c3a;font-weight:700">✓</span><span style="display:block;font-size:11px;color:var(--text-light)">${val.slice(2)}</span>`
+  if(val.startsWith('✗ '))return`<span style="color:#c0392b;font-weight:700">✗</span><span style="display:block;font-size:11px;color:var(--text-light)">${val.slice(2)}</span>`
+  return`<span style="color:var(--text)">${val}</span>`
+}
+
+function renderTable(cols,vars){
+  const head=document.getElementById('bk-head'),body=document.getElementById('bk-body')
+  if(!cols.length||!vars.length){
+    head.innerHTML='<tr><th>Variable</th></tr>'
+    body.innerHTML='<tr><td class="empty-msg" colspan="2">Selecciona competidores y variables para ver el benchmark</td></tr>'
+    return
+  }
+  let h='<tr><th>Variable</th>'
+  cols.forEach(c=>{h+=`<th>${c.name}</th>`})
+  h+='</tr>';head.innerHTML=h
+  let rows=''
+  vars.forEach(v=>{
+    let r=`<tr><td>${v.label}</td>`
+    cols.forEach(c=>{
+      const rv=c.data[v.id];const val=(rv===null||rv===undefined)?'—':String(rv)
+      r+=`<td>${cellVal(v.id,val)}</td>`
+    })
+    rows+=r+'</tr>'
+  })
+  body.innerHTML=rows
+}
+
+function renderConclusions(cols){
+  const el=document.getElementById('concl-content'),title=document.getElementById('concl-title')
+  if(!cols.length){el.innerHTML='<p class="no-data">Selecciona al menos un competidor para ver las conclusiones.</p>';return}
+  title.textContent=`Análisis de ${cols.length} competidor${cols.length>1?'es':''} seleccionado${cols.length>1?'s':''}`
+  const campo=cols.filter(c=>c.data.cat==='campo'),local=cols.filter(c=>c.data.cat==='local')
+  const conPel=cols.filter(c=>isYes(c.data.peluqueria)).length
+  const conVet=cols.filter(c=>isYes(c.data.veterinario)).length
+  const conRec=cols.filter(c=>isYes(c.data.recogida)).length
+  const recInc=cols.filter(c=>c.data.recogida_incluida==='✓').length
+  const recCob=conRec-recInc
+  const conDev=cols.filter(c=>c.data.devolucion_casa==='✓').length
+  const conCam=cols.filter(c=>isYes(c.data.camara)).length
+  const conGPS=cols.filter(c=>isYes(c.data.gps)).length
+  const conAdi=cols.filter(c=>isYes(c.data.adiestramiento)).length
+  const conPis=cols.filter(c=>c.data.piscina==='✓').length
+  const cierraV=cols.filter(c=>c.data.apertura_verano==='✗').length
+  const abreV=cols.filter(c=>c.data.apertura_verano==='✓').length
+  const pubPre=cols.filter(c=>c.data.precio_publica==='✓').length
+  const gDia=cols.filter(c=>c.data.guarderia_dia==='✓').length
+  const preciosCampo=campo.map(c=>c.data.precio_dia_num).filter(v=>v!==null)
+  const preciosLocal=local.map(c=>c.data.precio_dia_num).filter(v=>v!==null)
+  const bonosCampo=campo.map(c=>c.data.bono_mensual_num).filter(v=>v!==null)
+  const bonosLocal=local.map(c=>c.data.bono_mensual_num).filter(v=>v!==null)
+  const avgPC=avg(preciosCampo),avgPL=avg(preciosLocal),avgBC=avg(bonosCampo),avgBL=avg(bonosLocal)
+  const años=cols.map(c=>c.data.antiguedad).filter(v=>v!==null&&!isNaN(v))
+  const masAnt=años.length?Math.min(...años):null
+  const masAntC=masAnt?cols.find(c=>c.data.antiguedad===masAnt):null
+  const masNue=años.length?Math.max(...años):null
+  const masNueC=masNue&&masNue!==masAnt?cols.find(c=>c.data.antiguedad===masNue):null
+  const recCampo=campo.filter(c=>isYes(c.data.recogida)).length
+  const recLocal=local.filter(c=>isYes(c.data.recogida)).length
+  const conSup=cols.filter(c=>c.data.superficie_num).sort((a,b)=>b.data.superficie_num-a.data.superficie_num)
+  const conPrecio=cols.filter(c=>c.data.precio_dia_num!==null).sort((a,b)=>b.data.precio_dia_num-a.data.precio_dia_num)
+  const multiInst=cols.filter(c=>c.data.instalaciones>1)
+
+  let h=''
+
+  h+=`<div class="concl-grid">
+    <div class="cm"><div class="cm-lbl">Con peluquería</div><div class="cm-val">${pct(conPel,cols.length)}</div><div class="cm-sub">${conPel} de ${cols.length}</div></div>
+    <div class="cm"><div class="cm-lbl">Con veterinario</div><div class="cm-val">${pct(conVet,cols.length)}</div><div class="cm-sub">${conVet} de ${cols.length}</div></div>
+    <div class="cm"><div class="cm-lbl">Ofrecen recogida</div><div class="cm-val">${pct(conRec,cols.length)}</div><div class="cm-sub">${conRec} de ${cols.length}</div></div>
+    <div class="cm"><div class="cm-lbl">Publican precios</div><div class="cm-val">${pct(pubPre,cols.length)}</div><div class="cm-sub">${pubPre} de ${cols.length}</div></div>
+    <div class="cm"><div class="cm-lbl">Guardería de día</div><div class="cm-val">${pct(gDia,cols.length)}</div><div class="cm-sub">${gDia} de ${cols.length}</div></div>
+    <div class="cm"><div class="cm-lbl">Abren en verano</div><div class="cm-val">${pct(abreV,cols.length)}</div><div class="cm-sub">${cierraV>0?cierraV+' cierran':'ninguno cierra'}</div></div>
+  </div>`
+
+  h+=`<div class="cb"><h3>Precios por categoría</h3>`
+  if(!avgPC&&!avgPL&&!avgBC&&!avgBL){h+=`<p class="no-data">Ninguno de los seleccionados publica precios.</p>`}
+  else{
+    if(campo.length){h+=`<div class="cr"><span class="cr-l"><span class="bc campo">campo</span> Precio medio día suelto</span><span class="cr-v hi">${avgPC?avgPC+'€':'sin datos'}</span></div>`}
+    if(local.length){h+=`<div class="cr"><span class="cr-l"><span class="bc local">local</span> Precio medio día suelto</span><span class="cr-v hi">${avgPL?avgPL+'€':'sin datos'}</span></div>`}
+    if(campo.length&&avgBC){h+=`<div class="cr"><span class="cr-l"><span class="bc campo">campo</span> Bono mensual medio</span><span class="cr-v hi">${avgBC}€</span></div>`}
+    if(local.length&&avgBL){h+=`<div class="cr"><span class="cr-l"><span class="bc local">local</span> Bono mensual medio</span><span class="cr-v hi">${avgBL}€</span></div>`}
+    const sinP=cols.length-pubPre
+    if(sinP>0){h+=`<div class="cr"><span class="cr-l">Sin precios publicados</span><span class="cr-v wa">${sinP} de ${cols.length} no publican</span></div>`}
+  }
+  h+=`</div>`
+
+  h+=`<div class="cb"><h3>Recogida a domicilio</h3>`
+  if(campo.length)h+=`<div class="cr"><span class="cr-l"><span class="bc campo">campo</span> Con recogida</span><span class="cr-v">${recCampo} de ${campo.length}</span></div>`
+  if(local.length)h+=`<div class="cr"><span class="cr-l"><span class="bc local">local</span> Con recogida</span><span class="cr-v">${recLocal} de ${local.length}</span></div>`
+  h+=`<div class="cr"><span class="cr-l">Recogida incluida en precio</span><span class="cr-v hi">${recInc===0?'Ninguno':recInc+' de '+cols.length}</span></div>`
+  h+=`<div class="cr"><span class="cr-l">Recogida cobrada aparte</span><span class="cr-v">${recCob===0?'Ninguno':recCob}</span></div>`
+  h+=`<div class="cr"><span class="cr-l">Devolución dentro de casa</span><span class="cr-v hi">${conDev===0?'Ninguno la ofrece':conDev+' la ofrecen'}</span></div>`
+  h+=`</div>`
+
+  if(conPrecio.length){
+    h+=`<div class="cb"><h3>Más caros — precio día publicado</h3><ul class="t3">`
+    conPrecio.slice(0,3).forEach((c,i)=>{
+      const dif=[]
+      if(isYes(c.data.veterinario))dif.push('veterinario')
+      if(isYes(c.data.peluqueria))dif.push('peluquería')
+      if(isYes(c.data.recogida))dif.push('recogida')
+      if(isYes(c.data.adiestramiento))dif.push('adiestramiento')
+      if(c.data.piscina==='✓')dif.push('piscina')
+      if(isYes(c.data.camara))dif.push('cámara')
+      h+=`<li><span class="t3-r">${['🥇','🥈','🥉'][i]}</span><div><div class="t3-n">${c.name} — ${c.data.precio_dia}</div><div class="t3-d">${c.data.cat==='campo'?'🌿 Campo':'🏢 Local'}${dif.length?' · '+dif.join(', '):''}</div></div></li>`
+    })
+    h+=`</ul></div>`
+  }
+
+  if(conSup.length){
+    h+=`<div class="cb"><h3>Más grandes por superficie</h3><ul class="t3">`
+    conSup.slice(0,3).forEach((c,i)=>{
+      const sup=c.data.superficie_num>=10000?(c.data.superficie_num/10000).toFixed(1)+' ha':c.data.superficie_num.toLocaleString('es-ES')+' m²'
+      h+=`<li><span class="t3-r">${['🥇','🥈','🥉'][i]}</span><div><div class="t3-n">${c.name}</div><div class="t3-d">${sup} · ${c.data.cat==='campo'?'🌿 Campo':'🏢 Local'}</div></div></li>`
+    })
+    h+=`</ul></div>`
+  }
+
+  if(multiInst.length){
+    h+=`<div class="cb"><h3>Más de una instalación</h3><ul class="t3">`
+    multiInst.forEach(c=>{h+=`<li><span class="t3-r" style="font-size:13px">${c.data.instalaciones}</span><div><div class="t3-n">${c.name}</div><div class="t3-d">${c.data.instalaciones} centros · ${c.data.cat==='campo'?'🌿 Campo':'🏢 Local'}</div></div></li>`})
+    h+=`</ul></div>`
+  }
+
+  h+=`<div class="cb"><h3>Antigüedad del mercado</h3>`
+  if(años.length){
+    h+=`<div class="cr"><span class="cr-l">Con fecha verificada</span><span class="cr-v">${años.length} de ${cols.length}</span></div>`
+    if(masAntC)h+=`<div class="cr"><span class="cr-l">El más antiguo</span><span class="cr-v hi">${masAntC.name} (${masAnt}, ${2025-masAnt} años)</span></div>`
+    if(masNueC)h+=`<div class="cr"><span class="cr-l">El más reciente con fecha</span><span class="cr-v">${masNueC.name} (${masNue})</span></div>`
+  }else{h+=`<p class="no-data">Ninguno de los seleccionados tiene fecha verificada.</p>`}
+  h+=`</div>`
+
+  h+=`<div class="insights-grid">`
+  if(cierraV>0)h+=`<div class="insight amber"><span><strong>Gap de verano:</strong> ${cierraV} de ${cols.length} cierran en julio–agosto.</span></div>`
+  if(pubPre<Math.ceil(cols.length/2))h+=`<div class="insight amber"><span><strong>Poca transparencia:</strong> solo ${pubPre} de ${cols.length} publican precios.</span></div>`
+  if(conCam===0)h+=`<div class="insight green"><span><strong>Cámara:</strong> ningún seleccionado la ofrece. Diferencial claro.</span></div>`
+  if(conGPS===0)h+=`<div class="insight green"><span><strong>GPS en perros:</strong> ninguno lo ofrece. Sin competencia directa.</span></div>`
+  if(conDev===0)h+=`<div class="insight green"><span><strong>Devolución en casa:</strong> ninguno la ofrece.</span></div>`
+  h+=`</div>`
+
+  el.innerHTML=h
+}
+
+function render(){
+  renderPills()
+  const cols=COMPS.filter(c=>selComps.has(c.id))
+  const vars=VARS.filter(v=>selVars.has(v.id))
+  renderTable(cols,vars)
+  renderConclusions(cols)
+}
+
+function selAll(type){
+  if(type==='comp'){clearFilters();return}
+  VARS.forEach(v=>selVars.add(v.id));render()
+}
+function noneAll(type){
+  if(type==='comp')selComps.clear()
+  else selVars.clear()
+  render()
+}
+
+function exportPDF(){
+  closeDrop()
+  window.print()
+}
+
+render()
+</script>
+</body>
+</html>
