@@ -216,7 +216,13 @@ footer strong{color:rgba(255,255,255,.8)}
   </div>
 
   <div class="conclusions" id="conclusions">
-    <div class="slabel">Conclusiones</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px">
+      <div class="slabel" style="margin-bottom:0">Conclusiones</div>
+      <div style="display:flex;gap:6px">
+        <button id="btn-concl-todos" onclick="setConclFilter('todos')" style="font-family:'Quicksand',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;border:1px solid var(--green);background:var(--green);color:white;cursor:pointer;transition:all .15s">Todos</button>
+        <button id="btn-concl-espana" onclick="setConclFilter('espana')" style="font-family:'Quicksand',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;border:1px solid var(--border-mid);background:var(--white);color:var(--text-muted);cursor:pointer;transition:all .15s">Solo España</button>
+      </div>
+    </div>
     <div class="stitle" id="concl-title">Análisis de los competidores seleccionados</div>
     <div id="concl-content"></div>
   </div>
@@ -263,6 +269,22 @@ let selComps=new Set(COMPS.map(c=>c.id))
 let selVars=new Set(VARS.map(v=>v.id))
 let activeFilters={}
 let dropOpen=false
+let conclFilter='todos'
+
+function setConclFilter(val){
+  conclFilter=val
+  const btnTodos=document.getElementById('btn-concl-todos')
+  const btnEsp=document.getElementById('btn-concl-espana')
+  if(val==='espana'){
+    btnEsp.style.cssText='font-family:\'Quicksand\',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;border:1px solid var(--green);background:var(--green);color:white;cursor:pointer;transition:all .15s'
+    btnTodos.style.cssText='font-family:\'Quicksand\',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;border:1px solid var(--border-mid);background:var(--white);color:var(--text-muted);cursor:pointer;transition:all .15s'
+  } else {
+    btnTodos.style.cssText='font-family:\'Quicksand\',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;border:1px solid var(--green);background:var(--green);color:white;cursor:pointer;transition:all .15s'
+    btnEsp.style.cssText='font-family:\'Quicksand\',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;border:1px solid var(--border-mid);background:var(--white);color:var(--text-muted);cursor:pointer;transition:all .15s'
+  }
+  const cols=COMPS.filter(c=>selComps.has(c.id))
+  renderConclusions(conclFilter==='espana'?cols.filter(c=>c.data.pais==='España'):cols)
+}
 
 // helpers
 const pct=(n,t)=>t===0?'—':Math.round(n/t*100)+'%'
@@ -499,7 +521,7 @@ function render(){
   const cols=COMPS.filter(c=>selComps.has(c.id))
   const vars=VARS.filter(v=>selVars.has(v.id))
   renderTable(cols,vars)
-  renderConclusions(cols)
+  renderConclusions(conclFilter==='espana'?cols.filter(c=>c.data.pais==='España'):cols)
 }
 
 function selAll(type){
