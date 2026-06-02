@@ -517,9 +517,23 @@ function renderConclusions(cols){
   el.innerHTML=h
 }
 
+function scoreComp(c, varIds){
+  let s=0
+  for(const vid of varIds){
+    if(!BOOL_KEYS.includes(vid))continue
+    const v=c.data[vid]
+    if(v==='✓')s+=2
+    else if(v==='✗')s+=1
+  }
+  return s
+}
+
 function render(){
   renderPills()
+  const varIds=Array.from(selVars)
   const cols=COMPS.filter(c=>selComps.has(c.id))
+    .slice()
+    .sort((a,b)=>scoreComp(a,varIds)-scoreComp(b,varIds))
   const vars=VARS.filter(v=>selVars.has(v.id))
   renderTable(cols,vars)
   renderConclusions(conclFilter==='espana'?cols.filter(c=>c.data.pais==='España'):cols)
