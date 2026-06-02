@@ -518,14 +518,15 @@ function renderConclusions(cols){
 }
 
 function scoreComp(c, varIds){
-  let s=0
+  let yes=0,no=0
   for(const vid of varIds){
     if(!BOOL_KEYS.includes(vid))continue
     const v=c.data[vid]
-    if(v==='✓')s+=2
-    else if(v==='✗')s+=1
+    if(v==='✓')yes++
+    else if(v==='✗')no++
   }
-  return s
+  // primary: nº de ✓ (peso alto); secondary: nº de ✗ como desempate (dato conocido > ?)
+  return yes*100+no
 }
 
 function render(){
