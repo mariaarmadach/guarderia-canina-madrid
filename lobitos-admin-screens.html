@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lobitos Admin — Pantallas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Hanken+Grotesk:wght@400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #E7E0CE; font-family: 'Hanken Grotesk', sans-serif; }
+
+  /* ---- layout ---- */
+  .page { padding: 48px; }
+  .header { margin-bottom: 40px; }
+  .header-label { font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: #1F2D4A; font-weight: 600; margin-bottom: 10px; }
+  .header h1 { font-weight: 700; font-size: 34px; color: #1F2D4A; letter-spacing: -.015em; }
+  .header-sub { font-size: 13px; color: #6B5E48; margin-top: 6px; }
+
+  /* ---- section titles ---- */
+  .section-title { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #9C8A6E; margin-bottom: 18px; font-weight: 600; }
+
+  /* ---- screen label ---- */
+  .screen-label { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #9C8A6E; margin-bottom: 14px; font-weight: 600; }
+
+  /* ---- DESKTOP SHELL ---- */
+  .desktop-shell {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 18px 48px rgba(31,45,74,.2);
+    overflow: hidden;
+    display: flex;
+    height: 640px;
+  }
+  .sidebar {
+    width: 220px;
+    background: #1F2D4A;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 28px 0;
+  }
+  .sidebar-logo { padding: 0 24px 28px; border-bottom: 1px solid rgba(244,236,216,.12); margin-bottom: 12px; }
+  .sidebar-logo-main { font-family: 'Libre Caslon Display', serif; font-size: 20px; color: #FBF6EA; letter-spacing: .06em; }
+  .sidebar-logo-sub { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(244,236,216,.5); margin-top: 3px; }
+  .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: rgba(244,236,216,.65); cursor: pointer; }
+  .nav-item.active { background: rgba(244,236,216,.1); color: #FBF6EA; font-weight: 600; }
+  .nav-item svg { opacity: .7; flex-shrink: 0; }
+  .nav-item.active svg { opacity: 1; }
+  .sidebar-user { padding: 18px 24px 0; border-top: 1px solid rgba(244,236,216,.12); margin-top: auto; }
+  .sidebar-user-name { font-size: 13px; font-weight: 600; color: #FBF6EA; }
+  .sidebar-user-role { font-size: 11px; color: rgba(244,236,216,.5); margin-top: 2px; }
+  .sidebar-logout { font-size: 11px; color: #C9A24B; margin-top: 10px; cursor: pointer; letter-spacing: .06em; }
+  .main-content { flex: 1; background: #FBF6EA; overflow-y: auto; }
+
+  /* scrollbar */
+  .main-content::-webkit-scrollbar { width: 4px; }
+  .main-content::-webkit-scrollbar-thumb { background: rgba(31,45,74,.15); border-radius: 4px; }
+
+  /* ---- MOBILE SHELL (cuidadora) ---- */
+  .mobile-outer {
+    width: 344px;
+    background: #1F2D4A;
+    border-radius: 50px;
+    padding: 12px;
+    box-shadow: 0 26px 60px rgba(31,45,74,.34);
+    flex-shrink: 0;
+  }
+  .mobile-inner {
+    width: 320px;
+    min-height: 694px;
+    background: #FBF6EA;
+    border-radius: 40px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 26px 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1F2D4A;
+    flex-shrink: 0;
+  }
+
+  /* ---- chips ---- */
+  .chip { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; }
+  .chip-pending  { background: rgba(201,162,75,.2);  color: #8A6D2F; }
+  .chip-confirmed{ background: rgba(31,45,74,.12);   color: #1F2D4A; }
+  .chip-cancelled{ background: rgba(31,45,74,.06);   color: #9C8A6E; }
+  .chip-approved { background: rgba(31,45,74,.1);    color: #1F2D4A; }
+  .chip-rejected { background: rgba(156,58,49,.12);  color: #9C3A31; }
+  .chip-done     { background: rgba(80,160,100,.15); color: #2A7A3C; }
+
+  /* ---- KPI card ---- */
+  .kpi { background: #fff; border: 1px solid rgba(31,45,74,.1); border-radius: 10px; padding: 18px 20px; }
+  .kpi-label { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: #9C8A6E; font-weight: 600; }
+  .kpi-value { font-family: 'Libre Caslon Display', serif; font-size: 36px; color: #1F2D4A; line-height: 1; margin-top: 8px; }
+  .kpi-sub   { font-size: 11px; color: #9C8A6E; margin-top: 4px; }
+
+  /* ---- table ---- */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .tbl th { text-align: left; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: #9C8A6E; font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgba(31,45,74,.1); }
+  .tbl td { padding: 12px 12px; border-bottom: 1px solid rgba(31,45,74,.06); color: #3A3024; vertical-align: middle; }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl tr:hover td { background: rgba(31,45,74,.02); }
+
+  /* ---- avatar ---- */
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: #EDE3CC; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: #1F2D4A; flex-shrink: 0; }
+  .avatar-sm { width: 28px; height: 28px; font-size: 11px; }
+
+  /* ---- btn ---- */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; border-radius: 7px; font-family: 'Hanken Grotesk', sans-serif; font-weight: 600; font-size: 12px; padding: 8px 14px; cursor: pointer; }
+  .btn-navy   { background: #1F2D4A; color: #FBF6EA; }
+  .btn-outline{ background: transparent; color: #1F2D4A; border: 1px solid rgba(31,45,74,.35); }
+  .btn-ghost  { background: transparent; color: #9C8A6E; }
+  .btn-green  { background: #2A7A3C; color: #fff; }
+  .btn-sm     { font-size: 11px; padding: 6px 11px; }
+  .btn-lg     { font-size: 14px; padding: 14px 20px; width: 100%; border-radius: 10px; }
+
+  /* ---- form ---- */
+  .field-label { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #9C8A6E; font-weight: 600; margin-bottom: 6px; }
+  .field-input { width: 100%; border: 1px solid rgba(31,45,74,.2); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: #1F2D4A; font-family: 'Hanken Grotesk', sans-serif; background: transparent; outline: none; }
+  .field-input::placeholder { color: #9C8A6E; }
+
+  /* ---- progress ---- */
+  .progress-track { height: 6px; background: rgba(31,45,74,.1); border-radius: 3px; overflow: hidden; }
+  .progress-fill  { height: 100%; background: #1F2D4A; border-radius: 3px; }
+
+  /* ---- route stop ---- */
+  .stop { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(31,45,74,.08); }
+  .stop-num { width: 28px; height: 28px; border-radius: 50%; background: #1F2D4A; color: #FBF6EA; font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .stop-type { font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 8px; border-radius: 12px; }
+  .stop-pickup   { background: rgba(201,162,75,.2);  color: #8A6D2F; }
+  .stop-delivery { background: rgba(31,45,74,.1);    color: #1F2D4A; }
+  .stop-done     { opacity: .45; text-decoration: line-through; }
+
+  /* ---- week grid ---- */
+  .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+  .day-cell { background: #fff; border: 1px solid rgba(31,45,74,.1); border-radius: 10px; padding: 14px 10px; text-align: center; cursor: pointer; }
+  .day-cell.active { border-color: #1F2D4A; }
+  .day-name { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #9C8A6E; font-weight: 600; }
+  .day-num  { font-size: 13px; font-weight: 600; color: #1F2D4A; margin: 4px 0; }
+  .day-count { font-family: 'Libre Caslon Display', serif; font-size: 28px; color: #1F2D4A; line-height: 1; }
+  .day-avatars { display: flex; justify-content: center; gap: 3px; margin-top: 8px; flex-wrap: wrap; }
+
+  /* ---- allergy / med card ---- */
+  .alert-card { border-radius: 10px; padding: 12px 14px; }
+  .alert-allergy { background: rgba(201,162,75,.18); border-left: 3px solid #C9A24B; }
+  .alert-med     { background: rgba(156,58,49,.1);   border-left: 3px solid #9C3A31; }
+  .alert-title   { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+  .alert-allergy .alert-title { color: #8A6D2F; }
+  .alert-med .alert-title     { color: #9C3A31; }
+
+  /* ---- diary card ---- */
+  .diary-card { background: #fff; border: 1px solid rgba(31,45,74,.1); border-radius: 12px; overflow: hidden; }
+  .diary-photo { height: 140px; background: #EDE3CC; display: flex; align-items: center; justify-content: center; }
+  .diary-body  { padding: 14px; }
+
+  /* ---- spacers ---- */
+  .mt4  { margin-top: 4px;  }
+  .mt8  { margin-top: 8px;  }
+  .mt12 { margin-top: 12px; }
+  .mt16 { margin-top: 16px; }
+  .mt20 { margin-top: 20px; }
+  .mt24 { margin-top: 24px; }
+  .mb4  { margin-bottom: 4px;  }
+  .mb8  { margin-bottom: 8px;  }
+  .mb12 { margin-bottom: 12px; }
+  .mb16 { margin-bottom: 16px; }
+  .gap8 { gap: 8px; }
+  .gap12{ gap: 12px; }
+  .flex { display: flex; }
+  .flex-col { flex-direction: column; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+  .p20 { padding: 20px; }
+  .p24 { padding: 24px; }
+  .p28 { padding: 28px; }
+  .fw600{ font-weight: 600; }
+  .fw700{ font-weight: 700; }
+  .fs12 { font-size: 12px; }
+  .fs13 { font-size: 13px; }
+  .fs14 { font-size: 14px; }
+  .fs16 { font-size: 16px; }
+  .fs18 { font-size: 18px; }
+  .fs22 { font-size: 22px; }
+  .c-navy { color: #1F2D4A; }
+  .c-sand { color: #9C8A6E; }
+  .c-gold { color: #C9A24B; }
+  .c-red  { color: #9C3A31; }
+  .serif  { font-family: 'Libre Caslon Display', serif; }
+  .script { font-family: 'Pinyon Script', cursive; }
+  .w100   { width: 100%; }
+  .border-bottom { border-bottom: 1px solid rgba(31,45,74,.08); }
+  .col-left  { width: 33%; flex-shrink: 0; padding-right: 28px; border-right: 1px solid rgba(31,45,74,.08); }
+  .col-right { flex: 1; padding-left: 28px; overflow-y: auto; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-label">Lobitos Social Club — Panel de Administración</div>
+    <h1>Pantallas admin & cuidadora</h1>
+    <div class="header-sub">Bloque A: Desktop (admin) · 8 pantallas &nbsp;·&nbsp; Bloque B: Móvil (cuidadora) · 3 pantallas</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- BLOQUE A — DESKTOP ADMIN                                     -->
+  <!-- ============================================================ -->
+
+  <!-- A1 — LOGIN ADMIN -->
+  <div class="section-title">Bloque A — Desktop / Admin</div>
+  <div class="screen-label">A1 — Login Admin</div>
+  <div style="max-width:900px; background:#1F2D4A; border-radius:12px; box-shadow:0 18px 48px rgba(31,45,74,.3); padding:80px 40px; display:flex; align-items:center; justify-content:center; margin-bottom:48px; position:relative; overflow:hidden;">
+    <div style="position:absolute; inset:18px; border:1px solid rgba(244,236,216,.14); border-radius:8px; pointer-events:none;"></div>
+    <div style="width:380px; position:relative;">
+      <div style="text-align:center; margin-bottom:48px;">
+        <div class="serif" style="font-size:42px; letter-spacing:.08em; color:#FBF6EA; line-height:1;">LOBITOS</div>
+        <div class="script" style="font-size:34px; color:#C9A24B; line-height:.7; margin-top:6px;">Social Club</div>
+        <div style="font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:rgba(244,236,216,.45); margin-top:18px;">Panel de administración</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:18px;">
+        <div>
+          <div class="field-label" style="color:rgba(244,236,216,.5);">Email</div>
+          <div style="border-bottom:1px solid rgba(244,236,216,.25); padding:10px 0; font-size:14px; color:rgba(244,236,216,.4);">admin@lobitos.club</div>
+        </div>
+        <div>
+          <div class="field-label" style="color:rgba(244,236,216,.5);">Contraseña</div>
+          <div style="border-bottom:1px solid rgba(244,236,216,.25); padding:10px 0; font-size:14px; color:#FBF6EA; display:flex; justify-content:space-between;">
+            <span>••••••••</span><span style="color:rgba(244,236,216,.4);">👁</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-navy mt24" style="width:100%; height:52px; border-radius:8px; font-size:14px; background:#C9A24B; color:#1F2D4A;">Entrar</button>
+    </div>
+  </div>
+
+  <!-- A2 — DASHBOARD -->
+  <div class="screen-label">A2 — Dashboard</div>
+  <div class="desktop-shell" style="max-width:1100px; margin-bottom:48px;">
+    <!-- sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-main">LOBITOS</div>
+        <div class="sidebar-logo-sub">Admin Panel</div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-item active">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FBF6EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+          Solicitudes
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.85"/></svg>
+          Usuarios
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Planificador
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          Ruta
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Diario
+        </div>
+      </nav>
+      <div class="sidebar-user">
+        <div class="sidebar-user-name">María Armada</div>
+        <div class="sidebar-user-role">Administradora</div>
+        <div class="sidebar-logout">Cerrar sesión</div>
+      </div>
+    </div>
+    <!-- main -->
+    <div class="main-content p28">
+      <div class="flex justify-between items-center mb16">
+        <div>
+          <div class="fw700 fs22 c-navy">Buenas tardes, María</div>
+          <div class="fs13 c-sand mt4">Martes, 15 de julio de 2026</div>
+        </div>
+        <button class="btn btn-navy">+ Nueva solicitud</button>
+      </div>
+      <!-- KPIs -->
+      <div class="grid-4 mb24">
+        <div class="kpi"><div class="kpi-label">Perros hoy</div><div class="kpi-value">8</div><div class="kpi-sub">2 con alergias</div></div>
+        <div class="kpi"><div class="kpi-label">Solicitudes pendientes</div><div class="kpi-value" style="color:#8A6D2F;">3</div><div class="kpi-sub">Requieren confirmación</div></div>
+        <div class="kpi"><div class="kpi-label">Socios activos</div><div class="kpi-value">24</div><div class="kpi-sub">2 sin bono activo</div></div>
+        <div class="kpi"><div class="kpi-label">Bonos a renovar</div><div class="kpi-value">2</div><div class="kpi-sub">Quedan ≤ 2 días</div></div>
+      </div>
+      <!-- tabla hoy -->
+      <div class="flex justify-between items-center mb12">
+        <div class="fw600 fs14 c-navy">Servicios de hoy</div>
+        <span class="btn btn-ghost btn-sm" style="font-size:12px; color:#9C8A6E;">Ver todos →</span>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>Perro</th><th>Dueño</th><th>Recogida</th><th>Tipo</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td><div class="flex items-center gap8"><div class="avatar avatar-sm">G</div> Gilda</div></td><td class="c-sand">María A.</td><td class="c-navy fw600">09:00</td><td><span style="font-size:12px; color:#9C8A6E;">Parada Norte</span></td><td><span class="chip chip-confirmed">Confirmado</span></td></tr>
+          <tr><td><div class="flex items-center gap8"><div class="avatar avatar-sm">L</div> Lola</div></td><td class="c-sand">Carlos R.</td><td class="c-navy fw600">09:15</td><td><span style="font-size:12px; color:#9C8A6E;">Domicilio</span></td><td><span class="chip chip-pending">Pendiente</span></td></tr>
+          <tr><td><div class="flex items-center gap8"><div class="avatar avatar-sm">B</div> Bruno</div></td><td class="c-sand">Ana L.</td><td class="c-navy fw600">09:30</td><td><span style="font-size:12px; color:#9C8A6E;">Parada Norte</span></td><td><span class="chip chip-confirmed">Confirmado</span></td></tr>
+          <tr><td><div class="flex items-center gap8"><div class="avatar avatar-sm">C</div> Canela</div></td><td class="c-sand">Pedro M.</td><td class="c-navy fw600">09:30</td><td><span style="font-size:12px; color:#9C8A6E;">Parada Sur</span></td><td><span class="chip chip-pending">Pendiente</span></td></tr>
+          <tr><td><div class="flex items-center gap8"><div class="avatar avatar-sm">R</div> Rocky</div></td><td class="c-sand">Laura G.</td><td class="c-navy fw600">10:00</td><td><span style="font-size:12px; color:#9C8A6E;">Domicilio</span></td><td><span class="chip chip-confirmed">Confirmado</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- A3 — SOLICITUDES -->
+  <div class="screen-label">A3 — Solicitudes del día</div>
+  <div class="desktop-shell" style="max-width:1100px; margin-bottom:48px;">
+    <div class="sidebar">
+      <div class="sidebar-logo"><div class="sidebar-logo-main">LOBITOS</div><div class="sidebar-logo-sub">Admin Panel</div></div>
+      <nav class="sidebar-nav">
+        <div class="nav-item">Dashboard</div>
+        <div class="nav-item active">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FBF6EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+          Solicitudes
+        </div>
+        <div class="nav-item">Usuarios</div>
+        <div class="nav-item">Planificador</div>
+        <div class="nav-item">Ruta</div>
+        <div class="nav-item">Diario</div>
+      </nav>
+      <div class="sidebar-user"><div class="sidebar-user-name">María Armada</div><div class="sidebar-logout">Cerrar sesión</div></div>
+    </div>
+    <div class="main-content p28">
+      <div class="flex justify-between items-center mb20">
+        <div class="fw700 fs22 c-navy">Solicitudes</div>
+        <div class="flex gap8 items-center">
+          <input type="date" value="2026-07-15" class="field-input" style="width:160px; padding:8px 12px; font-size:13px;">
+          <button class="btn btn-navy">Confirmar todas (3)</button>
+        </div>
+      </div>
+      <!-- tabla expandida (una fila expandida) -->
+      <table class="tbl">
+        <thead><tr><th>Perro / Dueño</th><th>Hora</th><th>Tipo</th><th>Estado</th><th style="text-align:right;">Acciones</th></tr></thead>
+        <tbody>
+          <tr><td><div class="flex items-center gap8"><div class="avatar">G</div><div><div class="fw600 c-navy">Gilda</div><div class="fs12 c-sand">María Armada</div></div></div></td><td class="fw600 c-navy">09:00</td><td class="fs13 c-sand">Parada Norte</td><td><span class="chip chip-confirmed">Confirmado</span></td><td style="text-align:right;"><div class="flex gap8" style="justify-content:flex-end"><button class="btn btn-outline btn-sm">Editar</button><button class="btn btn-ghost btn-sm c-red">Cancelar</button></div></td></tr>
+          <!-- fila expandida -->
+          <tr style="background:rgba(31,45,74,.03);">
+            <td colspan="5" style="padding:0 12px 14px 56px;">
+              <div class="flex gap12 mt12">
+                <div class="alert-card alert-allergy" style="flex:1"><div class="alert-title">⚠️ Alergias</div><div class="fs13 c-navy">Sensibilidad al pollo</div></div>
+                <div class="alert-card" style="flex:1; background:rgba(31,45,74,.05);"><div class="alert-title" style="font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#9C8A6E; margin-bottom:4px;">Observaciones</div><div class="fs13 c-navy">Tímida con perros grandes</div></div>
+              </div>
+            </td>
+          </tr>
+          <tr><td><div class="flex items-center gap8"><div class="avatar">L</div><div><div class="fw600 c-navy">Lola</div><div class="fs12 c-sand">Carlos Ruiz</div></div></div></td><td class="fw600 c-navy">09:15</td><td class="fs13 c-sand">Domicilio</td><td><span class="chip chip-pending">Pendiente</span></td><td style="text-align:right;"><div class="flex gap8" style="justify-content:flex-end;"><button class="btn btn-navy btn-sm">Confirmar</button><button class="btn btn-ghost btn-sm c-red">Cancelar</button></div></td></tr>
+          <tr><td><div class="flex items-center gap8"><div class="avatar">B</div><div><div class="fw600 c-navy">Bruno</div><div class="fs12 c-sand">Ana López</div></div></div></td><td class="fw600 c-navy">09:30</td><td class="fs13 c-sand">Parada Norte</td><td><span class="chip chip-confirmed">Confirmado</span></td><td style="text-align:right;"><div class="flex gap8" style="justify-content:flex-end;"><button class="btn btn-outline btn-sm">Editar</button><button class="btn btn-ghost btn-sm c-red">Cancelar</button></div></td></tr>
+          <tr><td><div class="flex items-center gap8"><div class="avatar">C</div><div><div class="fw600 c-navy">Canela</div><div class="fs12 c-sand">Pedro Martín</div></div></div></td><td class="fw600 c-navy">09:30</td><td class="fs13 c-sand">Parada Sur</td><td><span class="chip chip-pending">Pendiente</span></td><td style="text-align:right;"><div class="flex gap8" style="justify-content:flex-end;"><button class="btn btn-navy btn-sm">Confirmar</button><button class="btn btn-ghost btn-sm c-red">Cancelar</button></div></td></tr>
+          <tr><td><div class="flex items-center gap8"><div class="avatar">T</div><div><div class="fw600 c-navy">Toba</div><div class="fs12 c-sand">María Armada</div></div></div></td><td class="fw600 c-navy">10:00</td><td class="fs13 c-sand">Parada Norte</td><td><span class="chip chip-pending">Pendiente</span></td><td style="text-align:right;"><div class="flex gap8" style="justify-content:flex-end;"><button class="btn btn-navy btn-sm">Confirmar</button><button class="btn btn-ghost btn-sm c-red">Cancelar</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- A4 — USUARIOS TABLA -->
+  <div class="screen-label">A4 — Usuarios</div>
+  <div class="desktop-shell" style="max-width:1100px; margin-bottom:48px;">
+    <div class="sidebar">
+      <div class="sidebar-logo"><div class="sidebar-logo-main">LOBITOS</div><div class="sidebar-logo-sub">Admin Panel</div></div>
+      <nav class="sidebar-nav">
+        <div class="nav-item">Dashboard</div><div class="nav-item">Solicitudes</div>
+        <div class="nav-item active">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FBF6EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+          Usuarios
+        </div>
+        <div class="nav-item">Planificador</div><div class="nav-item">Ruta</div><div class="nav-item">Diario</div>
+      </nav>
+      <div class="sidebar-user"><div class="sidebar-user-name">María Armada</div><div class="sidebar-logout">Cerrar sesión</div></div>
+    </div>
+    <div class="main-content p28">
+      <div class="flex justify-between items-center mb20">
+        <div class="fw700 fs22 c-navy">Socios</div>
+        <input placeholder="Buscar por nombre o email…" class="field-input" style="width:260px; font-size:13px; padding:9px 14px;">
+      </div>
+      <table class="tbl">
+        <thead><tr><th>Socio</th><th>Email</th><th>Mascotas</th><th>Bono activo</th><th>Último servicio</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr style="cursor:pointer;"><td><div class="flex items-center gap8"><div class="avatar">M</div><div class="fw600 c-navy">María Armada</div></div></td><td class="c-sand fs12">maria@email.com</td><td class="c-navy fw600 fs13">2</td><td class="fs13"><span class="c-navy fw600">Bono 10</span> <span class="c-sand">· 6 días</span></td><td class="fs12 c-sand">Hoy</td><td><span class="chip chip-confirmed">Activa</span></td></tr>
+          <tr style="cursor:pointer;"><td><div class="flex items-center gap8"><div class="avatar">C</div><div class="fw600 c-navy">Carlos Ruiz</div></div></td><td class="c-sand fs12">carlos@email.com</td><td class="c-navy fw600 fs13">1</td><td class="fs13"><span class="c-navy fw600">Bono 20</span> <span class="c-sand">· 14 días</span></td><td class="fs12 c-sand">Ayer</td><td><span class="chip chip-confirmed">Activa</span></td></tr>
+          <tr style="cursor:pointer;"><td><div class="flex items-center gap8"><div class="avatar">A</div><div class="fw600 c-navy">Ana López</div></div></td><td class="c-sand fs12">ana@email.com</td><td class="c-navy fw600 fs13">1</td><td class="fs13"><span class="c-navy fw600">Bono 10</span> <span class="c-sand">· 2 días</span></td><td class="fs12 c-sand">Hace 2 días</td><td><span class="chip chip-pending" style="background:rgba(201,162,75,.15); color:#8A6D2F;">Renovar</span></td></tr>
+          <tr style="cursor:pointer;"><td><div class="flex items-center gap8"><div class="avatar">P</div><div class="fw600 c-navy">Pedro Martín</div></div></td><td class="c-sand fs12">pedro@email.com</td><td class="c-navy fw600 fs13">1</td><td class="fs13 c-sand">Sin bono</td><td class="fs12 c-sand">Hace 1 semana</td><td><span class="chip chip-cancelled">Sin bono</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- A5 — DETALLE USUARIO -->
+  <div class="screen-label">A5 — Detalle de usuario</div>
+  <div class="desktop-shell" style="max-width:1100px; margin-bottom:48px;">
+    <div class="sidebar">
+      <div class="sidebar-logo"><div class="sidebar-logo-main">LOBITOS</div><div class="sidebar-logo-sub">Admin Panel</div></div>
+      <nav class="sidebar-nav">
+        <div class="nav-item">Dashboard</div><div class="nav-item">Solicitudes</div>
+        <div class="nav-item active">Usuarios</div>
+        <div class="nav-item">Planificador</div><div class="nav-item">Ruta</div><div class="nav-item">Diario</div>
+      </nav>
+      <div class="sidebar-user"><div class="sidebar-user-name">María Armada</div><div class="sidebar-logout">Cerrar sesión</div></div>
+    </div>
+    <div class="main-content p28">
+      <div class="fs12 c-sand mb16">← Usuarios &nbsp;/&nbsp; <span class="c-navy fw600">María Armada</span></div>
+      <div class="flex" style="height:520px;">
+        <!-- col izq -->
+        <div class="col-left">
+          <div class="flex items-center gap12 mb20">
+            <div class="avatar" style="width:52px; height:52px; font-size:20px;">M</div>
+            <div><div class="fw700 fs16 c-navy">María Armada</div><div class="fs12 c-sand mt4">Socia desde 2026</div></div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div><div class="field-label">Email</div><div class="fs13 c-navy">maria@email.com</div></div>
+            <div><div class="field-label">Teléfono</div><div class="fs13 c-navy">+34 600 000 000</div></div>
+            <div><div class="field-label">Alta</div><div class="fs13 c-navy">Enero 2026</div></div>
+          </div>
+          <button class="btn btn-outline mt20" style="width:100%; gap:8px; font-size:12px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#1F2D4A"><path d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.2-1.4A10 10 0 1 0 12 2zm-2.7 6c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.3s1 2.6 1.2 2.8c.2.2 2 3.1 4.9 4.2 2.4.9 2.9.7 3.4.7.5-.1 1.6-.7 1.9-1.3.2-.6.2-1.2.1-1.3-.1-.1-.3-.2-.6-.3l-1.8-.9c-.2-.1-.4-.1-.6.1l-.8 1c-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.6l.5-.5.3-.5v-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4z"/></svg>
+            WhatsApp
+          </button>
+        </div>
+        <!-- col dcha -->
+        <div class="col-right" style="overflow-y:auto; max-height:520px;">
+          <!-- mascotas -->
+          <div class="fw600 fs13 c-navy mb12">Mascotas</div>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:24px;">
+            <div style="background:#fff; border:1px solid rgba(31,45,74,.1); border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:12px;">
+              <div class="avatar">G</div>
+              <div style="flex:1;"><div class="fw600 fs14 c-navy">Gilda</div><div class="fs12 c-sand">Teckel · Hembra</div></div>
+              <span class="chip chip-approved">Aprobada</span>
+              <button class="btn btn-ghost btn-sm">Ver</button>
+            </div>
+            <div style="background:#fff; border:1px solid rgba(31,45,74,.1); border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:12px;">
+              <div class="avatar" style="color:#9C8A6E;">T</div>
+              <div style="flex:1;"><div class="fw600 fs14 c-navy">Toba</div><div class="fs12 c-sand">Golden · Macho · ⚠️ Vacuna pendiente</div></div>
+              <span class="chip chip-pending">Pendiente</span>
+              <button class="btn btn-navy btn-sm">Aprobar</button>
+              <button class="btn btn-outline btn-sm" style="color:#9C3A31; border-color:#9C3A31;">Rechazar</button>
+            </div>
+          </div>
+          <!-- bono -->
+          <div class="fw600 fs13 c-navy mb12">Bono activo</div>
+          <div style="background:#fff; border:1px solid rgba(31,45,74,.1); border-radius:10px; padding:16px; margin-bottom:24px;">
+            <div class="flex justify-between items-center mb8">
+              <div class="fw600 c-navy">Bono 10 días</div>
+              <div class="fs13"><span class="fw700 fs18 c-navy">6</span> <span class="c-sand">/ 10 restantes</span></div>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width:40%"></div></div>
+            <div class="fs12 c-sand mt8">Contratado el 1 ene 2026</div>
+          </div>
+          <!-- historial -->
+          <div class="fw600 fs13 c-navy mb12">Últimos servicios</div>
+          <table class="tbl">
+            <thead><tr><th>Fecha</th><th>Mascota</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr><td class="fs12 c-sand">15/07/2026</td><td class="fs13 c-navy">Gilda</td><td><span class="chip chip-confirmed" style="font-size:9px;">Confirmado</span></td></tr>
+              <tr><td class="fs12 c-sand">12/07/2026</td><td class="fs13 c-navy">Gilda</td><td><span class="chip chip-done" style="font-size:9px;">Completado</span></td></tr>
+              <tr><td class="fs12 c-sand">08/07/2026</td><td class="fs13 c-navy">Gilda</td><td><span class="chip chip-done" style="font-size:9px;">Completado</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- A6 — PLANIFICADOR SEMANAL -->
+  <div class="screen-label">A6 — Planificador semanal</div>
+  <div class="desktop-shell" style="max-width:1100px; margin-bottom:48px;">
+    <div class="sidebar">
+      <div class="sidebar-logo"><div class="sidebar-logo-main">LOBITOS</div><div class="sidebar-logo-sub">Admin Panel</div></div>
+      <nav class="sidebar-nav">
+        <div class="nav-item">Dashboard</div><div class="nav-item">Solicitudes</div><div class="nav-item">Usuarios</div>
+        <div class="nav-item active">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FBF6EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Planificador
+        </div>
+        <div class="nav-item">Ruta</div><div class="nav-item">Diario</div>
+      </nav>
+      <div class="sidebar-user"><div class="sidebar-user-name">María Armada</div><div class="sidebar-logout">Cerrar sesión</div></div>
+    </div>
+    <div class="main-content p28">
+      <div class="flex justify-between items-center mb20">
+        <div class="fw700 fs22 c-navy">Planificador</div>
+        <div class="flex gap8 items-center">
+          <button class="btn btn-outline btn-sm">← Sem anterior</button>
+          <span class="fs13 fw600 c-navy">14 – 20 julio 2026</span>
+          <button class="btn btn-outline btn-sm">Sem siguiente →</button>
+        </div>
+      </div>
+      <div class="week-grid">
+        <div class="day-cell"><div class="day-name">Lun</div><div class="day-num">14</div><div class="day-count">8</div><div class="day-avatars"><div class="avatar avatar-sm">G</div><div class="avatar avatar-sm">L</div><div class="avatar avatar-sm">B</div><div class="avatar avatar-sm" style="background:#EDE3CC; color:#9C8A6E; font-size:10px;">+5</div></div></div>
+        <div class="day-cell active" style="border-color:#1F2D4A; background:rgba(31,45,74,.04);"><div class="day-name">Mar</div><div class="day-num" style="background:#1F2D4A; color:#FBF6EA; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:12px;">15</div><div class="day-count" style="color:#1F2D4A;">5</div><div class="day-avatars"><div class="avatar avatar-sm">G</div><div class="avatar avatar-sm">C</div><div class="avatar avatar-sm">R</div></div></div>
+        <div class="day-cell"><div class="day-name">Mié</div><div class="day-num">16</div><div class="day-count">7</div><div class="day-avatars"><div class="avatar avatar-sm">B</div><div class="avatar avatar-sm">L</div><div class="avatar avatar-sm" style="background:#EDE3CC; color:#9C8A6E; font-size:10px;">+5</div></div></div>
+        <div class="day-cell"><div class="day-name">Jue</div><div class="day-num">17</div><div class="day-count">6</div><div class="day-avatars"><div class="avatar avatar-sm">G</div><div class="avatar avatar-sm">A</div></div></div>
+        <div class="day-cell"><div class="day-name">Vie</div><div class="day-num">18</div><div class="day-count">9</div><div class="day-avatars"><div class="avatar avatar-sm">L</div><div class="avatar avatar-sm">C</div><div class="avatar avatar-sm" style="background:#EDE3CC; color:#9C8A6E; font-size:10px;">+7</div></div></div>
+        <div class="day-cell" style="background:rgba(31,45,74,.03);"><div class="day-name">Sáb</div><div class="day-num" style="color:#9C8A6E;">19</div><div class="day-count" style="color:#9C8A6E;">0</div></div>
+        <div class="day-cell" style="background:rgba(31,45,74,.03);"><div class="day-name">Dom</div><div class="day-num" style="color:#9C8A6E;">20</div><div class="day-count" style="color:#9C8A6E;">0</div></div>
+      </div>
+      <!-- panel lateral del día seleccionado -->
+      <div style="margin-top:20px; background:#fff; border:1px solid rgba(31,45,74,.1); border-radius:10px; padding:20px;">
+        <div class="fw600 fs14 c-navy mb12">Martes 15 · 5 perros</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="flex items-center gap12"><div class="avatar">G</div><div style="flex:1"><div class="fw600 c-navy">Gilda</div><div class="fs12 c-sand">María A. · Parada Norte · 09:00</div></div><span class="alert-card alert-allergy" style="font-size:11px; padding:3px 10px; border-left:none; border-radius:20px;">Alergia pollo</span></div>
+          <div class="flex items-center gap12"><div class="avatar">L</div><div style="flex:1"><div class="fw600 c-navy">Lola</div><div class="fs12 c-sand">Carlos R. · Domicilio · 09:15</div></div><div style="width:60px;"></div></div>
+          <div class="flex items-center gap12"><div class="avatar">C</div><div style="flex:1"><div class="fw600 c-navy">Canela</div><div class="fs12 c-sand">Pedro M. · Parada Sur · 09:30</div></div><span class="alert-card alert-med" style="font-size:11px; padding:3px 10px; border-left:none; border-radius:20px; background:rgba(156,58,49,.1); color:#9C3A31;">Medicación</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- A7 — RUTA -->
+  <div class="screen-label">A7 — Planificador de ruta</div>
+  <div class="desktop-shell" style="max-width:1100px; margin-bottom:48px;">
+    <div class="sidebar">
+      <div class="sidebar-logo"><div class="sidebar-logo-main">LOBITOS</div><div class="sidebar-logo-sub">Admin Panel</div></div>
+      <nav class="sidebar-nav">
+        <div class="nav-item">Dashboard</div><div class="nav-item">Solicitudes</div><div class="nav-item">Usuarios</div><div class="nav-item">Planificador</div>
+        <div class="nav-item active">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FBF6EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          Ruta
+        </div>
+        <div class="nav-item">Diario</div>
+      </nav>
+      <div class="sidebar-user"><div class="sidebar-user-name">María Armada</div><div class="sidebar-logout">Cerrar sesión</div></div>
+    </div>
+    <div class="main-content p28">
+      <div class="flex justify-between items-center mb20">
+        <div class="fw700 fs22 c-navy">Ruta del día</div>
+        <div class="flex gap8 items-center">
+          <input type="date" value="2026-07-15" class="field-input" style="width:150px; font-size:13px; padding:8px 12px;">
+          <select class="field-input" style="width:180px; font-size:13px; padding:8px 12px;">
+            <option>Laura García (cuidadora)</option>
+          </select>
+          <button class="btn btn-navy">Generar ruta</button>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column;">
+        <div class="stop">
+          <div class="stop-num">1</div>
+          <div class="flex items-center gap8" style="width:24px;"><span style="font-size:16px; cursor:pointer;">↕</span></div>
+          <span class="stop-type stop-pickup">Recogida</span>
+          <div class="avatar avatar-sm">G</div>
+          <div style="flex:1"><div class="fw600 c-navy fs13">Gilda</div><div class="fs12 c-sand">Calle Mayor 14, 2ºA</div></div>
+          <input value="09:00" class="field-input" style="width:80px; font-size:13px; padding:6px 10px; text-align:center;">
+          <button class="btn btn-ghost btn-sm">↑</button>
+          <button class="btn btn-ghost btn-sm">↓</button>
+        </div>
+        <div class="stop">
+          <div class="stop-num">2</div>
+          <div class="flex items-center gap8" style="width:24px;"><span style="font-size:16px; cursor:pointer;">↕</span></div>
+          <span class="stop-type stop-pickup">Recogida</span>
+          <div class="avatar avatar-sm">L</div>
+          <div style="flex:1"><div class="fw600 c-navy fs13">Lola</div><div class="fs12 c-sand">Av. Constitución 8, 1ºB</div></div>
+          <input value="09:15" class="field-input" style="width:80px; font-size:13px; padding:6px 10px; text-align:center;">
+          <button class="btn btn-ghost btn-sm">↑</button>
+          <button class="btn btn-ghost btn-sm">↓</button>
+        </div>
+        <div class="stop">
+          <div class="stop-num">3</div>
+          <div class="flex items-center gap8" style="width:24px;"><span style="font-size:16px; cursor:pointer;">↕</span></div>
+          <span class="stop-type stop-pickup">Recogida</span>
+          <div class="avatar avatar-sm">C</div>
+          <div style="flex:1"><div class="fw600 c-navy fs13">Canela <span style="font-size:10px; color:#9C3A31; font-weight:700; margin-left:6px;">💊 Med</span></div><div class="fs12 c-sand">Calle Luna 3, 3ºC</div></div>
+          <input value="09:30" class="field-input" style="width:80px; font-size:13px; padding:6px 10px; text-align:center;">
+          <button class="btn btn-ghost btn-sm">↑</button>
+          <button class="btn btn-ghost btn-sm">↓</button>
+        </div>
+        <div class="stop stop-done">
+          <div class="stop-num" style="background:#9C8A6E;">4</div>
+          <div style="width:24px;"></div>
+          <span class="stop-type" style="background:rgba(31,45,74,.08); color:#9C8A6E;">Entrega</span>
+          <div class="avatar avatar-sm" style="color:#9C8A6E;">G</div>
+          <div style="flex:1"><div class="fs13" style="color:#9C8A6E;">Gilda · Calle Mayor 14</div></div>
+          <span class="fs12" style="color:#9C8A6E;">18:30</span>
+        </div>
+      </div>
+      <div style="margin-top:20px; padding-top:16px; border-top:1px solid rgba(31,45,74,.1); display:flex; justify-content:space-between; align-items:center;">
+        <div class="fs13 c-sand">8 paradas · ~2h 30min estimado</div>
+        <button class="btn btn-navy">Guardar orden</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- A8 — DIARIO -->
+  <div class="screen-label">A8 — Diario (subida de fotos)</div>
+  <div class="desktop-shell" style="max-width:1100px; margin-bottom:72px;">
+    <div class="sidebar">
+      <div class="sidebar-logo"><div class="sidebar-logo-main">LOBITOS</div><div class="sidebar-logo-sub">Admin Panel</div></div>
+      <nav class="sidebar-nav">
+        <div class="nav-item">Dashboard</div><div class="nav-item">Solicitudes</div><div class="nav-item">Usuarios</div><div class="nav-item">Planificador</div><div class="nav-item">Ruta</div>
+        <div class="nav-item active">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FBF6EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Diario
+        </div>
+      </nav>
+      <div class="sidebar-user"><div class="sidebar-user-name">María Armada</div><div class="sidebar-logout">Cerrar sesión</div></div>
+    </div>
+    <div class="main-content p28">
+      <div class="flex justify-between items-center mb20">
+        <div class="fw700 fs22 c-navy">Diario del día</div>
+        <div class="flex gap8 items-center">
+          <input type="date" value="2026-07-15" class="field-input" style="width:150px; font-size:13px; padding:8px 12px;">
+          <button class="btn btn-navy">Publicar diario</button>
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="diary-card">
+          <div class="diary-photo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9C8A6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3l2-3h8l2 3h3a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <div class="diary-body">
+            <div class="fw600 c-navy mb8">Gilda</div>
+            <label style="display:block; background:rgba(31,45,74,.05); border:1px dashed rgba(31,45,74,.25); border-radius:8px; padding:12px; text-align:center; cursor:pointer; font-size:12px; color:#9C8A6E;">📷 Subir foto</label>
+            <textarea placeholder="Nota del día…" rows="2" style="width:100%; margin-top:8px; border:1px solid rgba(31,45,74,.15); border-radius:8px; padding:8px 10px; font-size:12px; font-family:'Hanken Grotesk',sans-serif; color:#1F2D4A; resize:none; background:transparent;"></textarea>
+          </div>
+        </div>
+        <div class="diary-card">
+          <div class="diary-photo" style="background:#EDE3CC; position:relative; overflow:hidden;">
+            <div style="position:absolute; inset:0; background:linear-gradient(to bottom, transparent 50%, rgba(31,45,74,.4)); display:flex; align-items:flex-end; justify-content:flex-start; padding:10px 12px;">
+              <span class="chip chip-done" style="font-size:9px;">Subido</span>
+            </div>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(31,45,74,.2)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          </div>
+          <div class="diary-body">
+            <div class="fw600 c-navy mb8">Lola <span class="fs11 c-sand fw400">· Subido por Laura</span></div>
+            <div class="fs12 c-sand" style="font-style:italic;">"Hoy ha jugado mucho con Bruno, muy bien portada."</div>
+          </div>
+        </div>
+        <div class="diary-card">
+          <div class="diary-photo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9C8A6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3l2-3h8l2 3h3a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <div class="diary-body">
+            <div class="fw600 c-navy mb8">Canela <span style="background:rgba(156,58,49,.1); color:#9C3A31; font-size:9px; font-weight:700; padding:2px 7px; border-radius:10px; margin-left:4px;">💊 Med</span></div>
+            <label style="display:block; background:rgba(31,45,74,.05); border:1px dashed rgba(31,45,74,.25); border-radius:8px; padding:12px; text-align:center; cursor:pointer; font-size:12px; color:#9C8A6E;">📷 Subir foto</label>
+            <textarea placeholder="Nota del día…" rows="2" style="width:100%; margin-top:8px; border:1px solid rgba(31,45,74,.15); border-radius:8px; padding:8px 10px; font-size:12px; font-family:'Hanken Grotesk',sans-serif; color:#1F2D4A; resize:none; background:transparent;"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- BLOQUE B — MÓVIL CUIDADORA                                   -->
+  <!-- ============================================================ -->
+
+  <div class="section-title" style="margin-top:8px;">Bloque B — Móvil / Cuidadora</div>
+  <div style="display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap;">
+
+    <!-- B1 — LOGIN CUIDADORA -->
+    <div>
+      <div class="screen-label">B1 — Login Cuidadora</div>
+      <div class="mobile-outer">
+        <div class="mobile-inner">
+          <div class="status-bar"><span>9:41</span></div>
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 30px;">
+            <div style="text-align:center; margin-bottom:48px;">
+              <div class="serif" style="font-size:34px; letter-spacing:.08em; color:#1F2D4A;">LOBITOS</div>
+              <div class="script" style="font-size:28px; color:#9C3A31; line-height:.7; margin-top:6px;">Social Club</div>
+              <div style="font-size:9px; letter-spacing:.28em; text-transform:uppercase; color:#9C8A6E; margin-top:16px;">Área de cuidadoras</div>
+            </div>
+            <div style="width:100%; display:flex; flex-direction:column; gap:18px;">
+              <div>
+                <div style="font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#9C8A6E; font-weight:600; margin-bottom:5px;">Email</div>
+                <div style="border-bottom:1px solid rgba(31,45,74,.22); padding:9px 0; font-size:13px; color:#9C8A6E;">laura@lobitos.club</div>
+              </div>
+              <div>
+                <div style="font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#9C8A6E; font-weight:600; margin-bottom:5px;">Contraseña</div>
+                <div style="border-bottom:1px solid rgba(31,45,74,.22); padding:9px 0; font-size:13px; color:#1F2D4A; display:flex; justify-content:space-between;"><span>••••••••</span><span style="color:#9C8A6E;">👁</span></div>
+              </div>
+              <button style="width:100%; height:52px; background:#1F2D4A; color:#FBF6EA; border:none; border-radius:10px; font-family:'Hanken Grotesk',sans-serif; font-size:14px; font-weight:600; margin-top:8px;">Entrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B2 — RUTA DEL DÍA -->
+    <div>
+      <div class="screen-label">B2 — Ruta del día (cuidadora)</div>
+      <div class="mobile-outer">
+        <div class="mobile-inner">
+          <div class="status-bar"><span>9:41</span></div>
+          <div style="flex:1; display:flex; flex-direction:column; padding:14px 22px 22px;">
+            <div class="flex justify-between items-center mb12">
+              <div>
+                <div style="font-size:13px; color:#9C8A6E;">Hola,</div>
+                <div style="font-weight:700; font-size:22px; color:#1F2D4A; letter-spacing:-.01em; line-height:1.1;">Laura</div>
+              </div>
+              <div style="text-align:right; font-size:11px; color:#9C8A6E;">Mar 15 jul</div>
+            </div>
+            <!-- barra progreso -->
+            <div style="background:#EDE3CC; border-radius:20px; padding:10px 14px; margin-bottom:16px;">
+              <div class="flex justify-between items-center mb8">
+                <div style="font-size:11px; font-weight:600; color:#1F2D4A; letter-spacing:.06em;">PROGRESO</div>
+                <div style="font-size:12px; font-weight:700; color:#1F2D4A;">3 / 8 paradas</div>
+              </div>
+              <div class="progress-track"><div class="progress-fill" style="width:37.5%"></div></div>
+            </div>
+            <!-- paradas -->
+            <div style="display:flex; flex-direction:column; gap:0;">
+              <!-- completada -->
+              <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid rgba(31,45,74,.08); opacity:.5;">
+                <div style="width:30px; height:30px; border-radius:50%; background:#9C8A6E; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0;">1</div>
+                <div style="font-size:18px;">🚐</div>
+                <div style="flex:1;">
+                  <div style="font-weight:600; font-size:14px; color:#9C8A6E; text-decoration:line-through;">Gilda · 09:00</div>
+                  <div style="font-size:11px; color:#9C8A6E;">C/ Mayor 14 · Recogida</div>
+                </div>
+                <span class="chip chip-done" style="font-size:9px;">✓</span>
+              </div>
+              <!-- activa -->
+              <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid rgba(31,45,74,.08); background:rgba(31,45,74,.03); margin:0 -22px; padding-left:22px; padding-right:22px;">
+                <div style="width:30px; height:30px; border-radius:50%; background:#1F2D4A; color:#FBF6EA; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0;">2</div>
+                <div style="font-size:18px;">🚐</div>
+                <div style="flex:1;">
+                  <div style="font-weight:700; font-size:15px; color:#1F2D4A;">Lola · 09:15</div>
+                  <div style="font-size:11px; color:#9C8A6E;">Av. Constitución 8 · Recogida</div>
+                </div>
+                <button style="background:#2A7A3C; color:#fff; border:none; border-radius:8px; padding:8px 12px; font-family:'Hanken Grotesk',sans-serif; font-size:11px; font-weight:700; cursor:pointer;">Recoger</button>
+              </div>
+              <!-- pendiente -->
+              <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid rgba(31,45,74,.08);">
+                <div style="width:30px; height:30px; border-radius:50%; background:#EDE3CC; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; color:#9C8A6E; flex-shrink:0;">3</div>
+                <div style="font-size:18px;">🚐</div>
+                <div style="flex:1;">
+                  <div style="font-weight:600; font-size:13px; color:#1F2D4A;">Canela · 09:30 <span style="font-size:10px; background:rgba(156,58,49,.1); color:#9C3A31; border-radius:8px; padding:2px 7px; font-weight:700; margin-left:4px;">💊 Med</span></div>
+                  <div style="font-size:11px; color:#9C8A6E;">C/ Luna 3 · Recogida</div>
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px; padding:12px 0;">
+                <div style="width:30px; height:30px; border-radius:50%; background:#EDE3CC; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; color:#9C8A6E; flex-shrink:0;">4</div>
+                <div style="font-size:18px;">🏠</div>
+                <div style="flex:1;">
+                  <div style="font-weight:600; font-size:13px; color:#1F2D4A;">Bruno · 18:00</div>
+                  <div style="font-size:11px; color:#9C8A6E;">Pl. España 2 · Entrega</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B3 — FICHA DEL PERRO -->
+    <div>
+      <div class="screen-label">B3 — Ficha del perro (cuidadora)</div>
+      <div class="mobile-outer">
+        <div class="mobile-inner">
+          <div class="status-bar"><span>9:41</span></div>
+          <div style="flex:1; overflow-y:auto;">
+            <div style="padding:8px 22px 22px;">
+              <!-- back -->
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2D4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+                <span style="font-weight:700; font-size:18px; color:#1F2D4A;">Lola</span>
+              </div>
+              <!-- foto -->
+              <div style="text-align:center; margin-bottom:16px;">
+                <div style="width:88px; height:88px; border-radius:50%; background:#EDE3CC; margin:0 auto; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:32px; color:#1F2D4A; border:3px solid #fff; box-shadow:0 4px 14px rgba(31,45,74,.18);">L</div>
+                <div style="font-weight:700; font-size:18px; color:#1F2D4A; margin-top:10px;">Lola</div>
+                <div style="font-size:12px; color:#9C8A6E;">Golden · Hembra · 3 años</div>
+              </div>
+              <!-- alertas -->
+              <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+                <div class="alert-card alert-allergy">
+                  <div class="alert-title">⚠️ Alergias</div>
+                  <div style="font-size:13px; color:#1F2D4A; margin-top:2px;">Sin alergias conocidas</div>
+                </div>
+                <div class="alert-card alert-med">
+                  <div class="alert-title">💊 Medicación</div>
+                  <div style="font-size:13px; color:#1F2D4A; margin-top:2px;">Ninguna</div>
+                </div>
+              </div>
+              <div style="margin-bottom:16px;">
+                <div style="font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#9C8A6E; font-weight:600; margin-bottom:5px;">Observaciones</div>
+                <div style="font-size:13px; color:#1F2D4A; line-height:1.5;">Le encanta buscar la pelota. Bien con otros perros.</div>
+              </div>
+              <!-- diario hoy -->
+              <div style="border-top:1px solid rgba(31,45,74,.1); padding-top:16px;">
+                <div style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#9C8A6E; font-weight:600; margin-bottom:12px;">Diario de hoy</div>
+                <button style="width:100%; height:52px; background:#EDE3CC; border:none; border-radius:10px; font-family:'Hanken Grotesk',sans-serif; font-size:14px; font-weight:600; color:#1F2D4A; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; margin-bottom:10px;">📷 Subir foto</button>
+                <textarea placeholder="Nota del día…" rows="3" style="width:100%; border:1px solid rgba(31,45,74,.18); border-radius:10px; padding:12px; font-size:13px; font-family:'Hanken Grotesk',sans-serif; color:#1F2D4A; resize:none; background:transparent; outline:none;"></textarea>
+                <button style="width:100%; height:48px; background:#1F2D4A; color:#FBF6EA; border:none; border-radius:10px; font-family:'Hanken Grotesk',sans-serif; font-size:13px; font-weight:600; margin-top:10px; cursor:pointer;">Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- footer -->
+  <div style="text-align:center; margin-top:72px; padding-bottom:48px;">
+    <div class="serif" style="font-size:22px; color:#1F2D4A; letter-spacing:.06em;">LOBITOS</div>
+    <div style="font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:#9C8A6E; margin-top:4px;">Social Club · Admin & Caregiver Screens</div>
+  </div>
+
+</div>
+</body>
+</html>
